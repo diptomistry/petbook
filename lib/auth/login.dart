@@ -166,7 +166,7 @@ class _MyLoginState extends State<MyLogin> {
                                     Spacer(),//to push it to the right side of the row
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pushNamed(context, 'reset');
+                                        Navigator.pushNamed(context, 'forgetpass');
                                       },
                                       child: Text(
                                         'Forgot Password',

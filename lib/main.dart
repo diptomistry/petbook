@@ -1,7 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'auth/homepage.dart';
+import 'auth/login.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(PetbookApp());
 }
 
@@ -23,8 +27,10 @@ class PetbookApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
+      home: HomePage(),
       routes: {
-        '/': (context) => HomePage(),
+        'homepage': (context) => HomePage(),
+        'login': (context) => MyLogin(),
         // Add more routes here
       },
     );

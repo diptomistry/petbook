@@ -38,10 +38,12 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                // Add navigation or action here
+
+                  Navigator.pushNamed(context, 'login');
+
               },
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).hintColor,
+                backgroundColor: Theme.of(context).hintColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -51,6 +53,7 @@ class HomePage extends StatelessWidget {
                   horizontal: 20,
                   vertical: 10,
                 ),
+
                 child: Text(
                   'Get Started',
                   style: TextStyle(

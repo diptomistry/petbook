@@ -225,10 +225,11 @@ class _MyLoginState extends State<MyLogin> {
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black54, // Customize the button color
+                                    backgroundColor:Color(0xFFA1887F), // Customize the button color
                                     foregroundColor: Colors.white, // Customize the text color
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(color: Colors.black, width: 0.3),
                                     ),
                                   ),
                                 ),

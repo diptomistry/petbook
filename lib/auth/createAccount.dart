@@ -100,7 +100,7 @@ class _createAccState extends State<createAcc> {
             SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.03,
+                  top: MediaQuery.of(context).size.height * 0.02,
                   left: 35,
                   right: 35,
                 ),
@@ -205,7 +205,7 @@ class _createAccState extends State<createAcc> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 14.0),
+                          //SizedBox(height: 2.0),
                           Row(
                             children: [
                               Expanded(

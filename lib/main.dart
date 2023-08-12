@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'auth/homepage.dart';
 import 'auth/login.dart';
 import 'auth/forgetPass.dart';
+import 'auth/createAccount.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ class PetbookApp extends StatelessWidget {
       title: 'Petbook',
       theme: ThemeData(
         primaryColor: Color(0xFF90CAF9),
-        hintColor: Color(0xFF808080),
+        hintColor: Color(0xFFFF7043),
         colorScheme: ColorScheme.light(
           background: Color(0xFFFFF9C4),
         ),
@@ -32,7 +33,8 @@ class PetbookApp extends StatelessWidget {
       routes: {
         'homepage': (context) => HomePage(),
         'login': (context) => MyLogin(),
-        'forgetpass':(context)=>ResetPassword()
+        'forgetpass':(context)=>ResetPassword(),
+        'register':(context)=>createAcc()
       },
     );
   }

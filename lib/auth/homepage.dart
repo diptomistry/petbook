@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
             Icon(
               Icons.pets,
               size: 100,
-              color: Theme.of(context).hintColor,
+              color: Color(0xFFFF7043),
             ),
             SizedBox(height: 20),
             Text(
@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
 
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).hintColor,
+                backgroundColor:Color(0xFFFF7043),// Theme.of(context).hintColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

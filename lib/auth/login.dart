@@ -225,7 +225,7 @@ class _MyLoginState extends State<MyLogin> {
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:Color(0xFFA1887F), // Customize the button color
+                                    backgroundColor:Color(0xFFFF7043), // Customize the button color
                                     foregroundColor: Colors.white, // Customize the text color
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -236,15 +236,9 @@ class _MyLoginState extends State<MyLogin> {
                               ),
                             ],
                           ),
-                          Text(
-                            '.......... or ..........',
-                            style: TextStyle(
-                              fontSize: 20.0,
 
-                            ),
-                          ),
                           SizedBox(
-                            height: 10,
+                            height: 40,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -18,7 +18,7 @@ class PetbookApp extends StatelessWidget {
       title: 'Petbook',
       theme: ThemeData(
         primaryColor: Color(0xFF90CAF9),
-        hintColor: Color(0xFFFF7043),
+        hintColor: Color(0xFFA1887F),
         colorScheme: ColorScheme.light(
           background: Color(0xFFFFF9C4),
         ),

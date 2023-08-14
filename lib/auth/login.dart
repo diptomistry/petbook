@@ -236,9 +236,15 @@ class _MyLoginState extends State<MyLogin> {
                               ),
                             ],
                           ),
-
-                          SizedBox(
-                            height: 40,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/or.png', // Path to the asset
+                                width: 150, // Adjust the width as needed
+                                height: 50, // Adjust the height as needed
+                              ),
+                            ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

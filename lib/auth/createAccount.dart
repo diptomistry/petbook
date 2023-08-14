@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class createAcc extends StatefulWidget {
   @override
@@ -35,7 +36,22 @@ class _createAccState extends State<createAcc> {
   }
 
   var email, password;
-  registration() async {
+  // Function to store user data in Firestore
+  Future<void> storeUserData(User user) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    await users.doc(user.uid).set({
+      'petName': _petNameController.text,
+      'petGender': _petGenderController.text,
+      'petAge': _petAgeController.text,
+      'petWeight': _petWeightController.text,
+      'ownerName': _ownerNameController.text,
+      'email': _emailController.text,
+      'ownersFb': _ownersFbController.text,
+      // Add more fields as needed
+    });
+  }
+  Future<void> registration() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     try {
       final User? user = (await firebaseAuth.createUserWithEmailAndPassword(
@@ -45,11 +61,19 @@ class _createAccState extends State<createAcc> {
           .user;
 
       if (user != null) {
+        // Store user data in Firestore
+        await storeUserData(user);
+
         // Send email verification
         await user.sendEmailVerification();
 
         // Navigate to email verification page
-
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => EmailVerificationPage(),
+          ),
+        );
       }
     } catch (e) {
       print('Registration failed: $e');
@@ -279,32 +303,81 @@ class _createAccState extends State<createAcc> {
 class EmailVerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Email Verification'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Email Verification',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+
+     return Container(
+       decoration: BoxDecoration(
+         image: DecorationImage(
+             image: AssetImage('assets/resetBg.png'), fit: BoxFit.cover),
+       ),
+
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+          title: Text(
+            'Petbook',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
             ),
-            SizedBox(height: 16),
-            Text(
-              'A verification email has been sent to your email address. Please check your inbox and follow the instructions to verify your email.',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate back to the login page
-                Navigator.pushNamed(context, 'welcome');
-              },
-              child: Text('Go to Login'),
-            ),
-          ],
+          ),
+          backgroundColor:Color(0xFFA1887F),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushNamed(context, 'login');
+            },
+          ),
+        ),
+        body: Center(
+          child: Column(
+           // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/emailReset.png', // Path to the asset
+                    width: 250, // Adjust the width as needed
+                    height: 250, // Adjust the height as needed
+                  ),
+                ],
+              ),
+              Text(
+                'Email Verification',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'A verification email has been sent to your email address. Please check your inbox and follow the instructions to verify your email.',
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate back to the login page
+                  Navigator.pushNamed(context, 'welcome');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:Color(0xFFA1887F),// Theme.of(context).hintColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Text(
+                  'Go to Login',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 56),
+
+
+
+            ],
+          ),
         ),
       ),
     );

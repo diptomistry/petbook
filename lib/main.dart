@@ -96,10 +96,12 @@ class _PetbookAppState extends State<PetbookApp> {
       ),
       darkTheme: ThemeData.dark().copyWith(
         primaryColor: Color(0xFF3F51B5),
-        hintColor: Color(0xFF473C38),
+        hintColor: Color(0xFF3d3132),
         colorScheme: ColorScheme.light(
           primary: CustomColor2,
           secondary:Colors.black ,
+
+
           background: Color(0xFF212121),
         ),
         scaffoldBackgroundColor: Color(0xFFFFF9C4),

@@ -80,9 +80,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return Scaffold(
       body: Center(
         child: Column(
@@ -136,7 +133,7 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     color: Theme.of(context).colorScheme.secondary,
-                   // color:Colors.black,
+                    // color:Colors.black,
                   ),
                 ),
               ),
@@ -172,10 +169,9 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      backgroundColor: Theme.of(context).colorScheme.background, // Set background color based on the theme
+      backgroundColor: Theme.of(context)
+          .colorScheme
+          .background, // Set background color based on the theme
     );
   }
 }
-
-
-

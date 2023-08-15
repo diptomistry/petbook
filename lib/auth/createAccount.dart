@@ -14,9 +14,9 @@ class _createAccState extends State<createAcc> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _petGenderController = TextEditingController();
   TextEditingController _ownersFbController = TextEditingController();
-  TextEditingController _petAgeController= TextEditingController();
-  TextEditingController _petWeightController= TextEditingController();
-  TextEditingController _ownerNameController= TextEditingController();
+  TextEditingController _petAgeController = TextEditingController();
+  TextEditingController _petWeightController = TextEditingController();
+  TextEditingController _ownerNameController = TextEditingController();
 
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
@@ -36,6 +36,7 @@ class _createAccState extends State<createAcc> {
   }
 
   var email, password;
+
   // Function to store user data in Firestore
   Future<void> storeUserData(User user) async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -51,6 +52,7 @@ class _createAccState extends State<createAcc> {
       // Add more fields as needed
     });
   }
+
   Future<void> registration() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     try {
@@ -80,13 +82,11 @@ class _createAccState extends State<createAcc> {
     }
   }
 
-
   bool validateEmail(String email) {
     final RegExp emailRegex =
-    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
+        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
     return emailRegex.hasMatch(email);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,6 @@ class _createAccState extends State<createAcc> {
 
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-
         appBar: AppBar(
           title: Text(
             'Petbook',
@@ -111,7 +110,7 @@ class _createAccState extends State<createAcc> {
               fontSize: 24,
             ),
           ),
-            backgroundColor:Theme.of(context).hintColor,
+          backgroundColor: Theme.of(context).hintColor,
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -175,7 +174,6 @@ class _createAccState extends State<createAcc> {
                               }
                               return null;
                             },
-
                           ),
                           roundedTextField(
                             controller: _ownerNameController,
@@ -244,15 +242,30 @@ class _createAccState extends State<createAcc> {
                                         Navigator.push(
                                           context,
                                           CupertinoPageRoute(
-                                            builder: (context) => EmailVerificationPage(),
+                                            builder: (context) =>
+                                                EmailVerificationPage(),
                                           ),
                                         );
                                       }
                                     }
                                   },
-                                  child: Text('Register'),
+                                  child: Text('Register',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary)),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:Theme.of(context).hintColor,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    // Customize the button color
+                                    foregroundColor: Colors.white,
+                                    // Customize the text color
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(
+                                          color: Colors.black, width: 0.3),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -270,6 +283,7 @@ class _createAccState extends State<createAcc> {
       ),
     );
   }
+
   Widget roundedTextField({
     required TextEditingController controller,
     required String hintText,
@@ -281,15 +295,17 @@ class _createAccState extends State<createAcc> {
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
+        style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
           hintText: hintText,
           filled: true,
           fillColor: Colors.grey[100],
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide.none,
+            //borderSide: BorderSide.none,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
           errorText: controller.text.isNotEmpty && validator != null
               ? validator(controller.text)
               : null,
@@ -298,8 +314,8 @@ class _createAccState extends State<createAcc> {
       ),
     );
   }
-
 }
+
 class EmailVerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -307,7 +323,9 @@ class EmailVerificationPage extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
-            _isDarkTheme(context) ? 'assets/resetBg.png' : 'assets/resetBgDark.png',
+            _isDarkTheme(context)
+                ? 'assets/resetBg.png'
+                : 'assets/resetBgDark.png',
           ),
           fit: BoxFit.cover,
         ),
@@ -359,7 +377,7 @@ class EmailVerificationPage extends StatelessWidget {
                   Navigator.pushNamed(context, 'welcome');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).hintColor,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -368,7 +386,7 @@ class EmailVerificationPage extends StatelessWidget {
                   'Go to Login',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
               ),

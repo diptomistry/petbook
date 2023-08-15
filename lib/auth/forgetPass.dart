@@ -45,10 +45,10 @@ class _ResetPasswordState extends State<ResetPassword> {
           'Petbook',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor:Color(0xFFA1887F),
+        backgroundColor:Theme.of(context).hintColor,
         centerTitle: true,
       ),
-
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 86.0, 16.0, 0.0),
@@ -67,25 +67,30 @@ class _ResetPasswordState extends State<ResetPassword> {
                   'Enter your email and we will send you a password reset link',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.grey[700],
+
                   ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 24),
                 TextField(
-                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    filled: true,
+                    fillColor: Colors.white,
                   ),
                 ),
+
                 SizedBox(height: 44),
                 ElevatedButton(
                   onPressed: _isResetting ? null : _resetPassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFA1887F),
+                    backgroundColor: Theme.of(context).hintColor,
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

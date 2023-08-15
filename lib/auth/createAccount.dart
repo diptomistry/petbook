@@ -101,7 +101,8 @@ class _createAccState extends State<createAcc> {
        */
 
       child: Scaffold(
-        //backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).colorScheme.background,
+
         appBar: AppBar(
           title: Text(
             'Petbook',
@@ -110,7 +111,7 @@ class _createAccState extends State<createAcc> {
               fontSize: 24,
             ),
           ),
-            backgroundColor:Color(0xFFA1887F),
+            backgroundColor:Theme.of(context).hintColor,
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -251,7 +252,7 @@ class _createAccState extends State<createAcc> {
                                   },
                                   child: Text('Register'),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:Color(0xFFA1887F),
+                                    backgroundColor:Theme.of(context).hintColor,
                                   ),
                                 ),
                               ),
@@ -283,7 +284,7 @@ class _createAccState extends State<createAcc> {
         decoration: InputDecoration(
           hintText: hintText,
           filled: true,
-          fillColor: Colors.grey[200],
+          fillColor: Colors.grey[100],
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide.none,
@@ -299,20 +300,21 @@ class _createAccState extends State<createAcc> {
   }
 
 }
-
 class EmailVerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-     return Container(
-       decoration: BoxDecoration(
-         image: DecorationImage(
-             image: AssetImage('assets/resetBg.png'), fit: BoxFit.cover),
-       ),
-
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            _isDarkTheme(context) ? 'assets/resetBg.png' : 'assets/resetBgDark.png',
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
           title: Text(
             'Petbook',
             style: TextStyle(
@@ -320,7 +322,7 @@ class EmailVerificationPage extends StatelessWidget {
               fontSize: 24,
             ),
           ),
-          backgroundColor:Color(0xFFA1887F),
+          backgroundColor: Theme.of(context).hintColor,
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -331,15 +333,14 @@ class EmailVerificationPage extends StatelessWidget {
         ),
         body: Center(
           child: Column(
-           // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/emailReset.png', // Path to the asset
-                    width: 250, // Adjust the width as needed
-                    height: 250, // Adjust the height as needed
+                    'assets/emailReset.png',
+                    width: 250,
+                    height: 250,
                   ),
                 ],
               ),
@@ -355,11 +356,10 @@ class EmailVerificationPage extends StatelessWidget {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  // Navigate back to the login page
                   Navigator.pushNamed(context, 'welcome');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:Color(0xFFA1887F),// Theme.of(context).hintColor,
+                  backgroundColor: Theme.of(context).hintColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -373,13 +373,14 @@ class EmailVerificationPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 56),
-
-
-
             ],
           ),
         ),
       ),
     );
+  }
+
+  bool _isDarkTheme(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
   }
 }

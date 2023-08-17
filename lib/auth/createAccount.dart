@@ -9,6 +9,7 @@ class createAcc extends StatefulWidget {
 }
 
 class _createAccState extends State<createAcc> {
+  String verificationCode = '';
   final _formKey = GlobalKey<FormState>();
   TextEditingController _petNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -36,6 +37,7 @@ class _createAccState extends State<createAcc> {
   }
 
   var email, password;
+  late bool registrationFailed;
 
   // Function to store user data in Firestore
   Future<void> storeUserData(User user) async {
@@ -62,29 +64,56 @@ class _createAccState extends State<createAcc> {
       ))
           .user;
 
-      if (user != null) {
+      if (user != null&&!registrationFailed) {
         // Store user data in Firestore
         await storeUserData(user);
 
         // Send email verification
         await user.sendEmailVerification();
+        var emailLink;
+        if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
+          // The client SDK will parse the code from the link for you.
+          firebaseAuth.signInWithEmailLink(email: email, emailLink: emailLink).then((value) {
+            // You can access the new user via value.user
+            // Additional user info profile *not* available via:
+            // value.additionalUserInfo.profile == null
+            // You can check if the user is new or existing:
+            // value.additionalUserInfo.isNewUser;
+            var userEmail = value.user;
+            print('Successfully signed in with email link!');
+          }).catchError((onError) {
+            print('Error signing in with email link $onError');
+          });
+        }
 
         // Navigate to email verification page
         Navigator.push(
           context,
           CupertinoPageRoute(
-            builder: (context) => EmailVerificationPage(),
+            builder: (context) => EmailVerificationPage(isEmailVerified: false),
           ),
         );
       }
     } catch (e) {
       print('Registration failed: $e');
+      // registrationFailed=true;
+      String errorMessage = extractErrorMessage(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
+  }
+  String extractErrorMessage(String fullErrorMessage) {
+    int startIndex = fullErrorMessage.indexOf(']') + 1;
+    return fullErrorMessage.substring(startIndex).trim();
   }
 
   bool validateEmail(String email) {
     final RegExp emailRegex =
-        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
+    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
     return emailRegex.hasMatch(email);
   }
 
@@ -237,16 +266,10 @@ class _createAccState extends State<createAcc> {
                                     if (_formKey.currentState!.validate()) {
                                       registration();
                                       // Perform registration logic
-                                      if (password.length >= 6) {
-                                        // Navigator.pushNamed(context, 'welcome');
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) =>
-                                                EmailVerificationPage(),
-                                          ),
-                                        );
-                                      }
+                                      if (password.length >= 6)
+                                        registrationFailed=false;
+                                      else
+                                        registrationFailed=true;
                                     }
                                   },
                                   child: Text('Register',
@@ -257,14 +280,14 @@ class _createAccState extends State<createAcc> {
                                               .secondary)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).hintColor,
                                     // Customize the button color
-                                    foregroundColor: Colors.white,
+                                    //foregroundColor: Colors.white,
                                     // Customize the text color
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       side: BorderSide(
-                                          color: Colors.black, width: 0.3),
+                                          color: Colors.blueGrey, width: 0.6),
                                     ),
                                   ),
                                 ),
@@ -297,6 +320,10 @@ class _createAccState extends State<createAcc> {
         obscureText: obscureText,
         style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(color: Colors.blueGrey), // Use a fallback color if bodyLargeColor is null
+          ),
           hintText: hintText,
           filled: true,
           fillColor: Colors.grey[100],
@@ -305,7 +332,7 @@ class _createAccState extends State<createAcc> {
             //borderSide: BorderSide.none,
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+          EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
           errorText: controller.text.isNotEmpty && validator != null
               ? validator(controller.text)
               : null,
@@ -315,8 +342,11 @@ class _createAccState extends State<createAcc> {
     );
   }
 }
-
 class EmailVerificationPage extends StatelessWidget {
+  final bool isEmailVerified;
+
+  EmailVerificationPage({required this.isEmailVerified});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -324,8 +354,8 @@ class EmailVerificationPage extends StatelessWidget {
         image: DecorationImage(
           image: AssetImage(
             _isDarkTheme(context)
-                ? 'assets/resetBg.png'
-                : 'assets/resetBgDark.png',
+                ? 'assets/resetBgDark.png'
+                : 'assets/resetBg.png',
           ),
           fit: BoxFit.cover,
         ),
@@ -373,9 +403,11 @@ class EmailVerificationPage extends StatelessWidget {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, 'welcome');
-                },
+                onPressed: isEmailVerified
+                    ? () {
+                  Navigator.pushNamed(context, 'profile');
+                }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
@@ -383,13 +415,15 @@ class EmailVerificationPage extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Go to Login',
+                  'Go to Profile',
                   style: TextStyle(
                     fontSize: 18,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
               ),
+
+
               SizedBox(height: 56),
             ],
           ),

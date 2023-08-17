@@ -390,7 +390,7 @@ class _MyLoginState extends State<MyLogin> {
             SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.4,
+                  top: MediaQuery.of(context).size.height * 0.58,
                 ),
                 //MediaQuery.of(context).size.height:users phn screen size
                 child: Column(
@@ -400,59 +400,84 @@ class _MyLoginState extends State<MyLogin> {
                       margin: EdgeInsets.only(left: 35, right: 35),
                       child: Column(
                         children: [
-                          TextField(
-                            style: TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                              fillColor: Colors.grey.shade100,
-                              filled: true,
-                              hintText: "Email",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
+                          Container(
+                            width: 300,
+                            height: 45,
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.only(bottom: 10),
+                                fillColor: Colors.grey.shade100,
+                                filled: true,
+                                hintText: "Email",
+
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(color: Colors.blueGrey), // Use a fallback color if bodyLargeColor is null
+                                ),
+
+                                prefixIcon: Icon(Icons.email, color: Theme.of(context).hintColor),
                               ),
-                              prefixIcon: Icon(Icons.email),
+                              onChanged: (value) {
+                                email = value;
+                              },
                             ),
-                            onChanged: (value) {
-                              email = value;
-                            },
                           ),
+
                           SizedBox(
-                            height: 30,
+                            height: 15,
                           ),
-                          TextField(
-                            style: TextStyle(),
-                            obscureText: !_passwordVisible,
-                            //pass will not show while typing
-                            decoration: InputDecoration(
-                              fillColor: Colors.grey.shade100,
-                              filled: true,
-                              hintText: "Password",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              prefixIcon: Icon(Icons.lock),
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _passwordVisible = !_passwordVisible;
-                                  });
-                                },
-                                icon: Icon(
-                                  _passwordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                          Container(
+                            width:300,
+                            height:45,
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              cursorColor: Colors.black,
+                              obscureText: !_passwordVisible,
+                              //pass will not show while typing
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.only(bottom: 10),
+                                fillColor: Colors.grey.shade100,
+                                filled: true,
+                                hintText: "Password",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                prefixIcon: Icon(Icons.lock, color: Theme.of(context).hintColor),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(color: Colors.blueGrey), // Use a fallback color if bodyLargeColor is null
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                      color: Theme.of(context).hintColor,
+                                  ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                password = value;
+                              },
                             ),
-                            onChanged: (value) {
-                              password = value;
-                            },
                           ),
-                          SizedBox(height: 8),
+                          //SizedBox(height: 3),
                           Text(
                             errorMessage,
                             style: TextStyle(color: Colors.red),
                           ),
-                          SizedBox(height: 20),
+                          //SizedBox(height: 10),
                           Row(
                             children: [
                               Checkbox(
@@ -484,7 +509,7 @@ class _MyLoginState extends State<MyLogin> {
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontSize: 12,
-                                          color: Colors.blueGrey,
+                                          color: Theme.of(context).hintColor,
                                         ),
                                       ),
                                     ),
@@ -492,6 +517,95 @@ class _MyLoginState extends State<MyLogin> {
                                 ),
                               ),
                             ],
+                          ),
+                          Container(
+                            width: 300,
+                            height: 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  //button in the whole row
+                                  child: ElevatedButton(
+                                    onPressed: login,
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                      Theme.of(context).hintColor,
+                                      // Customize the button color
+                                     // foregroundColor: Colors.red,
+                                      // Customize the text color
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        side: BorderSide(
+                                            color: Colors.blueGrey, width: 0.6),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/or.png', // Path to the asset
+                                width: 150, // Adjust the width as needed
+                                height: 30, // Adjust the height as needed
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: 300,
+                            height: 40,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: googleSignIn,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        side: BorderSide(
+                                            color: Colors.blueGrey, width: 0.6),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/google_logo.svg',
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                          const SizedBox(width: 5),
+                                          const Text(
+                                            'Sign-in with Google',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black54),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Row(
                             children: [
@@ -520,7 +634,7 @@ class _MyLoginState extends State<MyLogin> {
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontSize: 13,
-                                          color: Colors.blueGrey,
+                                          color: Theme.of(context).hintColor,
                                         ),
                                       ),
                                     ),
@@ -529,87 +643,7 @@ class _MyLoginState extends State<MyLogin> {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                //button in the whole row
-                                child: ElevatedButton(
-                                  onPressed: login,
-                                  child: Text(
-                                    'Login',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    // Customize the button color
-                                    foregroundColor: Colors.white,
-                                    // Customize the text color
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      side: BorderSide(
-                                          color: Colors.black, width: 0.3),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/or.png', // Path to the asset
-                                width: 150, // Adjust the width as needed
-                                height: 30, // Adjust the height as needed
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: googleSignIn,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      side: BorderSide(
-                                          color: Colors.black, width: 1.0),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/google_logo.svg',
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        const Text(
-                                          'Sign-in with Google',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+
                         ],
                       ),
                     )

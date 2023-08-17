@@ -89,7 +89,7 @@ class HomePage extends StatelessWidget {
             Icon(
               Icons.pets,
               size: 100,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).hintColor,
             ),
             SizedBox(height: 20),
             Text(
@@ -118,7 +118,7 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, 'login');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).hintColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

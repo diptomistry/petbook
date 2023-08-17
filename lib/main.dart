@@ -46,13 +46,16 @@ class PetbookApp extends StatelessWidget {
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:petbook/profile/UserProfilePage.dart';
+import 'package:petbook/profile/profile.dart';
 import 'auth/homepage.dart';
 import 'auth/login.dart';
 import 'auth/forgetPass.dart';
 import 'auth/createAccount.dart';
 
 Color CustomColor1 = Color(0xFFFF7043);
-Color CustomColor2 = Color(0xFFFEDCBA);
+Color CustomColor2 = Color(0xFFd9d9d9);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -74,13 +77,21 @@ class _PetbookAppState extends State<PetbookApp> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _themeMode = SchedulerBinding.instance.window.platformBrightness == Brightness.dark
+        ? ThemeMode.dark
+        : ThemeMode.light;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Petbook',
       themeMode: _themeMode,
       theme: ThemeData.light().copyWith(
         primaryColor: Color(0xFF90CAF9),
-        hintColor: Color(0xFFA1887F),
+        hintColor: Color(0xFF00a19d),
         colorScheme: ColorScheme.light(
           primary: CustomColor1,
           secondary: Colors.white,
@@ -89,14 +100,14 @@ class _PetbookAppState extends State<PetbookApp> {
         ),
         scaffoldBackgroundColor: Color(0xFFFFF9C4),
         textTheme: TextTheme(
-          bodyLarge: TextStyle(color: Color(0xFF333333)),
+          bodyLarge: TextStyle(color: Color(0xFF00a19d)),
           bodyMedium: TextStyle(color: Color(0xFFA1887F)),
         ),
 
       ),
       darkTheme: ThemeData.dark().copyWith(
         primaryColor: Color(0xFF3F51B5),
-        hintColor: Color(0xFF3d3132),
+        hintColor: Colors.grey,
         colorScheme: ColorScheme.light(
           primary: CustomColor2,
           secondary:Colors.black ,
@@ -104,7 +115,7 @@ class _PetbookAppState extends State<PetbookApp> {
 
           background: Color(0xFF212121),
         ),
-        scaffoldBackgroundColor: Color(0xFFFFF9C4),
+        scaffoldBackgroundColor: Colors.black,
         textTheme: TextTheme(
           bodyLarge: TextStyle(color: Colors.black),
           bodyMedium: TextStyle(color: Colors.grey),
@@ -116,7 +127,8 @@ class _PetbookAppState extends State<PetbookApp> {
         'homepage': (context) => HomePage(setThemeMode: _setThemeMode),
         'login': (context) => MyLogin(themeMode: _themeMode), // Pass _themeMode to MyLogin
         'forgetpass': (context) => ResetPassword(),
-        'register':(context)=>createAcc()
+        'register':(context)=>createAcc(),
+        'profile':(context)=>UserProfilePage(),
       },
       builder: (context, child) {
         return GestureDetector(

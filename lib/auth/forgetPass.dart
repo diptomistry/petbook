@@ -92,10 +92,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ElevatedButton(
                   onPressed: _isResetting ? null : _resetPassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    backgroundColor: Theme.of(context).hintColor,
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                          color: Colors.blueGrey, width: 0.6),
                     ),
                   ),
                   child: _isResetting

@@ -372,6 +372,7 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -478,45 +479,48 @@ class _MyLoginState extends State<MyLogin> {
                             style: TextStyle(color: Colors.red),
                           ),
                           //SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: _rememberPassword,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _rememberPassword = value!;
-                                  });
-                                },
-                                activeColor: Colors.grey,
-                                checkColor: Colors.blueGrey,
-                              ),
-                              Text('Remember Password'),
-                              Expanded(
-                                //The Expanded widget ensures that any remaining available space in the row is allocated to the Row widget that contains the "Forgot Password" text.
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    //The Spacer widget is inserted before the "Forgot Password" text
-                                    Spacer(),
-                                    //to push it to the right side of the row
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, 'forgetpass');
-                                      },
-                                      child: Text(
-                                        'Forgot Password',
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontSize: 12,
-                                          color: Theme.of(context).hintColor,
+                          Container(
+                            height: 30,
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: _rememberPassword,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _rememberPassword = value!;
+                                    });
+                                  },
+                                  activeColor: Theme.of(context).hintColor,
+                                  checkColor: Colors.white,
+                                ),
+                                Text('Remember Password'),
+                                Expanded(
+                                  //The Expanded widget ensures that any remaining available space in the row is allocated to the Row widget that contains the "Forgot Password" text.
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      //The Spacer widget is inserted before the "Forgot Password" text
+                                      Spacer(),
+                                      //to push it to the right side of the row
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, 'forgetpass');
+                                        },
+                                        child: Text(
+                                          'Forgot Password',
+                                          style: TextStyle(
+                                            decoration: TextDecoration.underline,
+                                            fontSize: 12,
+                                            color: Theme.of(context).colorScheme.primary,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           Container(
                             width: 300,
@@ -634,7 +638,7 @@ class _MyLoginState extends State<MyLogin> {
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontSize: 13,
-                                          color: Theme.of(context).hintColor,
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                       ),
                                     ),

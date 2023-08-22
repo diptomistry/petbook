@@ -54,8 +54,8 @@ import 'auth/login.dart';
 import 'auth/forgetPass.dart';
 import 'auth/createAccount.dart';
 
-Color CustomColor1 = Color(0xFFFF7043);
-Color CustomColor2 = Color(0xFFd9d9d9);
+Color CustomColor1 = Color(0xFF00a19d);
+Color CustomColor2 = Color(0xFF8aabca);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -107,13 +107,13 @@ class _PetbookAppState extends State<PetbookApp> {
       ),
       darkTheme: ThemeData.dark().copyWith(
         primaryColor: Color(0xFF3F51B5),
-        hintColor: Colors.grey,
+        hintColor: Color(0xFF263F60),
         colorScheme: ColorScheme.light(
           primary: CustomColor2,
           secondary:Colors.black ,
 
 
-          background: Color(0xFF212121),
+          background: Color(0xFF273443),
         ),
         scaffoldBackgroundColor: Colors.black,
         textTheme: TextTheme(
@@ -126,7 +126,7 @@ class _PetbookAppState extends State<PetbookApp> {
       routes: {
         'homepage': (context) => HomePage(setThemeMode: _setThemeMode),
         'login': (context) => MyLogin(themeMode: _themeMode), // Pass _themeMode to MyLogin
-        'forgetpass': (context) => ResetPassword(),
+        'forgetpass': (context) => ResetPassword(themeMode: _themeMode),
         'register':(context)=>createAcc(),
         'profile':(context)=>UserProfilePage(),
       },

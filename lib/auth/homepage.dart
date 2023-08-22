@@ -148,7 +148,7 @@ class HomePage extends StatelessWidget {
                     setThemeMode(ThemeMode.light); // Set light theme
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
+                    backgroundColor: Colors.white,
                     shape: CircleBorder(),
                   ),
                   child: Icon(Icons.wb_sunny, color: Colors.black),
@@ -159,7 +159,7 @@ class HomePage extends StatelessWidget {
                     setThemeMode(ThemeMode.dark); // Set dark theme
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
+                    backgroundColor: Colors.black,
                     shape: CircleBorder(),
                   ),
                   child: Icon(Icons.nightlight_round, color: Colors.white),

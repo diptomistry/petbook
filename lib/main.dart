@@ -47,6 +47,7 @@ class PetbookApp extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:petbook/NewsFeed/newsfeed.dart';
 import 'package:petbook/profile/UserProfilePage.dart';
 import 'package:petbook/profile/profile.dart';
 import 'auth/homepage.dart';
@@ -122,7 +123,7 @@ class _PetbookAppState extends State<PetbookApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(setThemeMode: _setThemeMode),// Pass _themeMode to MyLogin
+      home: NewsFeed(),// Pass _themeMode to MyLogin
       routes: {
         'homepage': (context) => HomePage(setThemeMode: _setThemeMode),
         'login': (context) => MyLogin(themeMode: _themeMode), // Pass _themeMode to MyLogin

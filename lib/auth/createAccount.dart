@@ -1,7 +1,9 @@
+import 'package:email_auth/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_otp/email_otp.dart';
 
 class createAcc extends StatefulWidget {
   @override
@@ -68,33 +70,17 @@ class _createAccState extends State<createAcc> {
         // Store user data in Firestore
         await storeUserData(user);
 
-        // Send email verification
-        await user.sendEmailVerification();
-        var emailLink;
-        if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
-          // The client SDK will parse the code from the link for you.
-          firebaseAuth.signInWithEmailLink(email: email, emailLink: emailLink).then((value) {
-            // You can access the new user via value.user
-            // Additional user info profile *not* available via:
-            // value.additionalUserInfo.profile == null
-            // You can check if the user is new or existing:
-            // value.additionalUserInfo.isNewUser;
-            var userEmail = value.user;
-            print('Successfully signed in with email link!');
-          }).catchError((onError) {
-            print('Error signing in with email link $onError');
-          });
-        }
 
-        // Navigate to email verification page
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => EmailVerificationPage(isEmailVerified: false),
-          ),
-        );
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) =>
+                  EmailVerificationPage(isEmailVerified: false),
+            ),
+          );
+
       }
-    } catch (e) {
+    }  catch (e) {
       print('Registration failed: $e');
       // registrationFailed=true;
       String errorMessage = extractErrorMessage(e.toString());
@@ -403,7 +389,7 @@ class EmailVerificationPage extends StatelessWidget {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: isEmailVerified
+                onPressed: !isEmailVerified
                     ? () {
                   Navigator.pushNamed(context, 'profile');
                 }

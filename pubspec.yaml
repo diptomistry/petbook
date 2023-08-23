@@ -42,6 +42,8 @@ dependencies:
   cloud_firestore: ^4.8.4
   camera: ^0.10.5+3
   curved_navigation_bar: ^1.0.3
+  email_auth: ^1.0.0
+  email_otp: ^2.0.1
 
 dev_dependencies:
   flutter_test:

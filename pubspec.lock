@@ -145,6 +145,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
+  email_auth:
+    dependency: "direct main"
+    description:
+      name: email_auth
+      sha256: a382b6d510c2f6a5dad5e424b693168c65681fff29d36d0abec7916472aaba1b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  email_otp:
+    dependency: "direct main"
+    description:
+      name: email_otp
+      sha256: cd1c90824f4da83764d8d0fdadcb152e4b4236102f3334f4753fc7f3d53a910b
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -292,10 +308,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "0.13.6"
   http_parser:
     dependency: transitive
     description:

@@ -23,6 +23,8 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
+	<key>NSCameraUsageDescription</key>
+    <string>Camera access is required for taking photos and videos.</string>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>

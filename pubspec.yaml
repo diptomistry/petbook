@@ -40,6 +40,8 @@ dependencies:
   google_sign_in: ^6.1.4
   flutter_svg: ^2.0.7
   cloud_firestore: ^4.8.4
+  camera: ^0.10.5+3
+  curved_navigation_bar: ^1.0.3
 
 dev_dependencies:
   flutter_test:

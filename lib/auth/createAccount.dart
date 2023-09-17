@@ -70,8 +70,9 @@ class _createAccState extends State<createAcc> {
         // Store user data in Firestore
         await storeUserData(user);
 
+        await user.sendEmailVerification();
 
-          Navigator.push(
+        Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) =>

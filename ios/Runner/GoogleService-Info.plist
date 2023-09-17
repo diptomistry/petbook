@@ -32,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:162314490059:ios:c2f0fb04c4b0d0b5610b4e</string>
+	<key>DATABASE_URL</key>
+	<string>https://petbook-8daf6-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>
 </plist>

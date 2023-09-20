@@ -193,7 +193,7 @@ class ChatRepository {
 
     // receiver
     await firestore
-        .collection('users')
+        .collection('userss')
         .doc(receiverId)
         .collection('chats')
         .doc(auth.currentUser!.uid)

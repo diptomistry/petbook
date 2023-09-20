@@ -7,6 +7,7 @@ import 'package:petbook/feature/auth/pages/login_page.dart';
 import 'package:petbook/feature/contact/pages/contact_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
 import 'package:petbook/feature/welcome/pages/welcome_page.dart';
+import 'package:petbook/message/userlist.dart';
 
 import '../feature/home/pages/chat_home_page.dart';
 
@@ -19,7 +20,9 @@ class HomeNavigationBar extends StatefulWidget {
 
 class _HomeNavigationBarState extends State<HomeNavigationBar> {
   int nav_Index = 0;
-  var pages = [HomePage(), HomePage(), WelcomePage() , HomePage(), HomePage()];
+  var pages = [HomePage(), HomePage() , HomePage(),UserList(
+    tips: "2",
+  ), HomePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

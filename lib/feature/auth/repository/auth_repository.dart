@@ -107,7 +107,7 @@ class AuthRepository {
 
       Navigator.pushNamedAndRemoveUntil(
         context,
-        Routes.home1,
+        Routes.home,
             (route) => false,
       );
     } catch (e) {

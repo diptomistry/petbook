@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:petbook/NavBar/HomeNavBar.dart';
 
 class createAcc extends StatefulWidget {
   @override
@@ -71,28 +72,26 @@ class _createAccState extends State<createAcc> {
         // Send email verification
         await user.sendEmailVerification();
         var emailLink;
-        if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
-          // The client SDK will parse the code from the link for you.
-          firebaseAuth.signInWithEmailLink(email: email, emailLink: emailLink).then((value) {
-            // You can access the new user via value.user
-            // Additional user info profile *not* available via:
-            // value.additionalUserInfo.profile == null
-            // You can check if the user is new or existing:
-            // value.additionalUserInfo.isNewUser;
-            var userEmail = value.user;
-            print('Successfully signed in with email link!');
-          }).catchError((onError) {
-            print('Error signing in with email link $onError');
-          });
+        print(FirebaseAuth.instance.currentUser?.emailVerified);
+        if(await FirebaseAuth.instance.currentUser!.emailVerified)
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => HomeNavigationBar(),
+            ),
+          );
+        else {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => EmailVerificationPage(isEmailVerified: false),
+            ),
+          );
         }
+        //FirebaseAuth.instance.currentUser?.emailVerified;
 
         // Navigate to email verification page
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => EmailVerificationPage(isEmailVerified: false),
-          ),
-        );
+
       }
     } catch (e) {
       print('Registration failed: $e');
@@ -344,6 +343,7 @@ class _createAccState extends State<createAcc> {
 }
 class EmailVerificationPage extends StatelessWidget {
   final bool isEmailVerified;
+
 
   EmailVerificationPage({required this.isEmailVerified});
 

@@ -333,7 +333,8 @@ class _MyLoginState extends State<MyLogin> {
       );
 
       final User? user = userCredential.user;
-
+      if(user!.emailVerified)
+        Navigator.pushNamed(context, 'home');
       if (user != null) {
         Navigator.pushNamed(context, 'welcome');
       }

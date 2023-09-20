@@ -52,6 +52,7 @@ class _createAccState extends State<createAcc> {
       'ownerName': _ownerNameController.text,
       'email': _emailController.text,
       'ownersFb': _ownersFbController.text,
+      'userID': user.uid,
       // Add more fields as needed
     });
   }
@@ -65,7 +66,7 @@ class _createAccState extends State<createAcc> {
       ))
           .user;
 
-      if (user != null&&!registrationFailed) {
+      if (user != null && !registrationFailed) {
         // Store user data in Firestore
         await storeUserData(user);
 
@@ -73,25 +74,27 @@ class _createAccState extends State<createAcc> {
         await user.sendEmailVerification();
         var emailLink;
         print(FirebaseAuth.instance.currentUser?.emailVerified);
-        if(await FirebaseAuth.instance.currentUser!.emailVerified)
+        if (await FirebaseAuth.instance.currentUser!.emailVerified)
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => HomeNavigationBar(),
+              builder: (context) => HomeNavigationBar(
+                nav_Index: 0,
+              ),
             ),
           );
         else {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => EmailVerificationPage(isEmailVerified: false),
+              builder: (context) =>
+                  EmailVerificationPage(isEmailVerified: false),
             ),
           );
         }
         //FirebaseAuth.instance.currentUser?.emailVerified;
 
         // Navigate to email verification page
-
       }
     } catch (e) {
       print('Registration failed: $e');
@@ -105,6 +108,7 @@ class _createAccState extends State<createAcc> {
       );
     }
   }
+
   String extractErrorMessage(String fullErrorMessage) {
     int startIndex = fullErrorMessage.indexOf(']') + 1;
     return fullErrorMessage.substring(startIndex).trim();
@@ -112,7 +116,7 @@ class _createAccState extends State<createAcc> {
 
   bool validateEmail(String email) {
     final RegExp emailRegex =
-    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
+        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
     return emailRegex.hasMatch(email);
   }
 
@@ -266,9 +270,9 @@ class _createAccState extends State<createAcc> {
                                       registration();
                                       // Perform registration logic
                                       if (password.length >= 6)
-                                        registrationFailed=false;
+                                        registrationFailed = false;
                                       else
-                                        registrationFailed=true;
+                                        registrationFailed = true;
                                     }
                                   },
                                   child: Text('Register',
@@ -279,7 +283,7 @@ class _createAccState extends State<createAcc> {
                                               .secondary)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                    Theme.of(context).hintColor,
+                                        Theme.of(context).hintColor,
                                     // Customize the button color
                                     //foregroundColor: Colors.white,
                                     // Customize the text color
@@ -321,7 +325,9 @@ class _createAccState extends State<createAcc> {
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(color: Colors.blueGrey), // Use a fallback color if bodyLargeColor is null
+            borderSide: BorderSide(
+                color: Colors
+                    .blueGrey), // Use a fallback color if bodyLargeColor is null
           ),
           hintText: hintText,
           filled: true,
@@ -331,7 +337,7 @@ class _createAccState extends State<createAcc> {
             //borderSide: BorderSide.none,
           ),
           contentPadding:
-          EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+              EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
           errorText: controller.text.isNotEmpty && validator != null
               ? validator(controller.text)
               : null,
@@ -341,9 +347,9 @@ class _createAccState extends State<createAcc> {
     );
   }
 }
+
 class EmailVerificationPage extends StatelessWidget {
   final bool isEmailVerified;
-
 
   EmailVerificationPage({required this.isEmailVerified});
 
@@ -405,8 +411,8 @@ class EmailVerificationPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: isEmailVerified
                     ? () {
-                  Navigator.pushNamed(context, 'profile');
-                }
+                        Navigator.pushNamed(context, 'profile');
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
@@ -422,8 +428,6 @@ class EmailVerificationPage extends StatelessWidget {
                   ),
                 ),
               ),
-
-
               SizedBox(height: 56),
             ],
           ),

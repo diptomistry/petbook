@@ -42,6 +42,7 @@ class PetbookApp extends StatelessWidget {
 }
 
  */
+import 'package:get/get.dart';
 import 'package:petbook/feature/auth/pages/login_page.dart';
 import 'package:petbook/feature/home/pages/chat_home_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
@@ -107,8 +108,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petbook/feature/welcome/pages/welcome_page.dart';
 import 'package:petbook/firebase_options.dart';
-import 'package:petbook/profile/UserProfilePage.dart';
-import 'package:petbook/profile/profile.dart';
+import 'package:petbook/profile1/UserProfilePage.dart';
+import 'package:petbook/profile1/profile.dart';
 import 'NavBar/HomeNavBar.dart';
 import 'auth/homepage.dart';
 import 'auth/login.dart';
@@ -120,9 +121,10 @@ Color CustomColor2 = Color(0xFF8aabca);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ProviderScope(
-    child:PetbookApp() ,
-  ),
+  runApp(
+    ProviderScope(
+      child: PetbookApp(),
+    ),
   );
 }
 /*void main() async {
@@ -163,7 +165,7 @@ class _PetbookAppState extends State<PetbookApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Petbook',
       themeMode: _themeMode,
       theme: ThemeData.light().copyWith(
@@ -195,7 +197,9 @@ class _PetbookAppState extends State<PetbookApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(setThemeMode: (ThemeMode ) {  },),
+      home: HomePage(
+        setThemeMode: (ThemeMode) {},
+      ),
       //     HomePage(setThemeMode: _setThemeMode), // Pass _themeMode to MyLogin
       routes: {
         'homepage': (context) => HomePage(setThemeMode: _setThemeMode),
@@ -204,7 +208,9 @@ class _PetbookAppState extends State<PetbookApp> {
         'forgetpass': (context) => ResetPassword(themeMode: _themeMode),
         'register': (context) => createAcc(),
         'profile': (context) => UserProfilePage(),
-        'home': (context) => const HomeNavigationBar(),
+        'home': (context) => const HomeNavigationBar(
+              nav_Index: 0,
+            ),
       },
       builder: (context, child) {
         return GestureDetector(
@@ -219,4 +225,4 @@ class _PetbookAppState extends State<PetbookApp> {
       },
     );
   }
-  }
+}

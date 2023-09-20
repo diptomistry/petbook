@@ -333,14 +333,26 @@ class _MyLoginState extends State<MyLogin> {
       );
 
       final User? user = userCredential.user;
-      if(user!.emailVerified)
-        Navigator.pushNamed(context, 'home');
-      if (user != null) {
-        Navigator.pushNamed(context, 'welcome');
-      }
+      FirebaseAuth.instance.authStateChanges().listen((User? uuser) {
+        if (uuser != null) {
+          if (uuser.emailVerified) {
+            // Navigate to the home screen if the email is verified
+            Navigator.pushNamed(context, 'home');
+          } else {
+            // If email is not verified, show a message to the user
+            setState(() {
+              errorMessage = 'Please verify your email address.';
+            });
+          }
+          // The user is signed in; you can access the user's information here.
+          // Update your UI accordingly.
+        } else {
+          // The user is signed out; update your UI accordingly.
+        }
+      });
     } catch (e) {
       setState(() {
-        errorMessage = 'Invalid email or password';
+        errorMessage = 'Invalid email or password or something wrong';
       });
       print('Login failed: $e');
     }
@@ -373,7 +385,6 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -413,17 +424,17 @@ class _MyLoginState extends State<MyLogin> {
                                 fillColor: Colors.grey.shade100,
                                 filled: true,
                                 hintText: "Email",
-
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(color: Colors.blueGrey), // Use a fallback color if bodyLargeColor is null
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .blueGrey), // Use a fallback color if bodyLargeColor is null
                                 ),
-
-                                prefixIcon: Icon(Icons.email, color: Theme.of(context).hintColor),
+                                prefixIcon: Icon(Icons.email,
+                                    color: Theme.of(context).hintColor),
                               ),
                               onChanged: (value) {
                                 email = value;
@@ -435,8 +446,8 @@ class _MyLoginState extends State<MyLogin> {
                             height: 15,
                           ),
                           Container(
-                            width:300,
-                            height:45,
+                            width: 300,
+                            height: 45,
                             child: TextField(
                               style: TextStyle(color: Colors.black),
                               cursorColor: Colors.black,
@@ -450,10 +461,13 @@ class _MyLoginState extends State<MyLogin> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                prefixIcon: Icon(Icons.lock, color: Theme.of(context).hintColor),
+                                prefixIcon: Icon(Icons.lock,
+                                    color: Theme.of(context).hintColor),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(color: Colors.blueGrey), // Use a fallback color if bodyLargeColor is null
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .blueGrey), // Use a fallback color if bodyLargeColor is null
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -465,7 +479,7 @@ class _MyLoginState extends State<MyLogin> {
                                     _passwordVisible
                                         ? Icons.visibility
                                         : Icons.visibility_off,
-                                      color: Theme.of(context).hintColor,
+                                    color: Theme.of(context).hintColor,
                                   ),
                                 ),
                               ),
@@ -483,41 +497,40 @@ class _MyLoginState extends State<MyLogin> {
                           Container(
                             height: 30,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Checkbox(
-                                  value: _rememberPassword,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _rememberPassword = value!;
-                                    });
-                                  },
-                                  activeColor: Theme.of(context).hintColor,
-                                  checkColor: Colors.white,
-                                ),
-                                Text('Remember Password'),
                                 Expanded(
-                                  //The Expanded widget ensures that any remaining available space in the row is allocated to the Row widget that contains the "Forgot Password" text.
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      //The Spacer widget is inserted before the "Forgot Password" text
-                                      Spacer(),
-                                      //to push it to the right side of the row
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, 'forgetpass');
-                                        },
-                                        child: Text(
-                                          'Forgot Password',
-                                          style: TextStyle(
-                                            decoration: TextDecoration.underline,
-                                            fontSize: 12,
-                                            color: Theme.of(context).colorScheme.primary,
-                                          ),
-                                        ),
+                                  flex: 1,
+                                  child: Checkbox(
+                                    value: _rememberPassword,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _rememberPassword = value!;
+                                      });
+                                    },
+                                    activeColor: Theme.of(context).hintColor,
+                                    checkColor: Colors.white,
+                                  ),
+                                ),
+                                Expanded(
+                                    flex: 4, child: Text('Remember Pass.')),
+                                Expanded(
+                                  flex: 5,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, 'forgetpass');
+                                    },
+                                    child: Text(
+                                      'Forgot Password',
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -543,9 +556,9 @@ class _MyLoginState extends State<MyLogin> {
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
-                                      Theme.of(context).hintColor,
+                                          Theme.of(context).hintColor,
                                       // Customize the button color
-                                     // foregroundColor: Colors.red,
+                                      // foregroundColor: Colors.red,
                                       // Customize the text color
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
@@ -590,7 +603,7 @@ class _MyLoginState extends State<MyLogin> {
                                       padding: const EdgeInsets.all(0),
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         children: [
                                           SvgPicture.asset(
                                             'assets/google_logo.svg',
@@ -613,42 +626,36 @@ class _MyLoginState extends State<MyLogin> {
                             ),
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 14.0),
-                                // Adjust the padding value as needed
-                                child: Text(
-                                  'Do not have an account?',
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 14.0),
+                                  // Adjust the padding value as needed
+                                  child: Text(
+                                    'Do not have an account?',
+                                  ),
                                 ),
                               ),
                               Expanded(
                                 //The Expanded widget ensures that any remaining available space in the row is allocated to the Row widget that contains the "Forgot Password" text.
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    //The Spacer widget is inserted before the "Forgot Password" text
-                                    Spacer(),
-                                    //to push it to the right side of the row
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, 'register');
-                                      },
-                                      child: Text(
-                                        'Create Account',
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontSize: 13,
-                                          color: Theme.of(context).colorScheme.primary,
-                                        ),
-                                      ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, 'register');
+                                  },
+                                  child: Text(
+                                    'Create Account',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 13,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-
                         ],
                       ),
                     )

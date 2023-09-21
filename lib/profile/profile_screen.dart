@@ -49,7 +49,8 @@ class ProfileScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(100),
                               child: Image(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(snapshot.data?.photoURL ??
+                                  image: NetworkImage(FirebaseAuth
+                                          .instance.currentUser?.photoURL ??
                                       'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1693564186~exp=1693564786~hmac=34badb23f9ce7734364a431e350be4ddba450762fc9d703bf10b4dc3d9f0e96b'))),
                         ),
                         Positioned(

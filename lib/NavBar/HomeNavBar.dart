@@ -8,11 +8,13 @@ import 'package:petbook/feature/contact/pages/contact_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
 import 'package:petbook/feature/welcome/pages/welcome_page.dart';
 import 'package:petbook/message/userlist.dart';
+import 'package:petbook/profile/profile_screen.dart';
 
 import '../feature/home/pages/chat_home_page.dart';
 
 class HomeNavigationBar extends StatefulWidget {
-  const HomeNavigationBar({super.key});
+  const HomeNavigationBar({super.key, required this.nav_Index});
+  final int nav_Index;
 
   @override
   State<HomeNavigationBar> createState() => _HomeNavigationBarState();
@@ -20,9 +22,24 @@ class HomeNavigationBar extends StatefulWidget {
 
 class _HomeNavigationBarState extends State<HomeNavigationBar> {
   int nav_Index = 0;
-  var pages = [HomePage(), HomePage() , HomePage(),UserList(
-    tips: "2",
-  ), HomePage()];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      nav_Index = widget.nav_Index;
+    });
+  }
+
+  var pages = [
+    HomePage(),
+    HomePage(),
+    HomePage(),
+    UserList(
+      tips: "2",
+    ),
+    ProfileScreen()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

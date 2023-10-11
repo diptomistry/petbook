@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:petbook/NewsFeed/HomePage.dart';
 import 'package:petbook/add_post/add_photo.dart';
+import 'package:petbook/apiCatsFact/cats_fact_api.dart';
 import 'package:petbook/feature/auth/pages/login_page.dart';
 import 'package:petbook/feature/contact/pages/contact_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
@@ -34,7 +35,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
   var pages = [
     HomePage(),
     HomePage(),
-    HomePage(),
+    CatsFact(),
     UserList(
       tips: "2",
     ),

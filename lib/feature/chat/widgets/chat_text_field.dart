@@ -1,5 +1,4 @@
 import 'package:petbook/common/enum/message_type.dart';
-import 'package:petbook/common/extension/custon_theme_extension.dart';
 import 'package:petbook/common/utils/coloors.dart';
 import 'package:petbook/common/widgets/custom_icon_button.dart';
 import 'package:petbook/feature/auth/pages/image_picker.dart';
@@ -93,7 +92,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
           minWidth: 50,
           iconColor: Colors.white,
           border: Border.all(
-            color: context.theme.greyColor!.withOpacity(.2),
+            color: Colors.lightBlue!.withOpacity(.2),
             width: 1,
           ),
         ),
@@ -101,7 +100,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
         Text(
           text,
           style: TextStyle(
-            color: context.theme.greyColor,
+            color: Colors.grey,
           ),
         ),
       ],
@@ -131,7 +130,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
           width: double.maxFinite,
           margin: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: context.theme.receiverChatCardBg,
+            color: Colors.lightBlue,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
@@ -206,9 +205,9 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Message',
-                    hintStyle: TextStyle(color: context.theme.greyColor),
+                    hintStyle: TextStyle(color: Colors.grey),
                     filled: true,
-                    fillColor: context.theme.chatTextFieldBg,
+                    fillColor: Colors.lightBlue,
                     isDense: true,
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(

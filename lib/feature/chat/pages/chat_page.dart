@@ -31,7 +31,7 @@ class ChatPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: context.theme.chatPageBgColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: InkWell(
           onTap: () {
@@ -88,7 +88,7 @@ class ChatPage extends ConsumerWidget {
                     final lastMessage = lastSeenMessage(singleUserModel.lastSeen);
 
                     return Text(
-                      /*singleUserModel.active ? 'online' : */'last seen ${lastSeenMessage(user.lastSeen)} ago',
+                      singleUserModel.active ? 'online' : 'last seen ${lastSeenMessage(user.lastSeen)} ago',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.white,
@@ -124,9 +124,9 @@ class ChatPage extends ConsumerWidget {
           Image(
             height: double.maxFinite,
             width: double.maxFinite,
-            image: const AssetImage('assets/images/doodle_bg.png'),
+            image: const AssetImage('assets/doodle_bg.png'),
             fit: BoxFit.cover,
-            color: context.theme.chatPageDoodleColor,
+            color: Colors.blue,
           ),
           // Stream of Chat
           Padding(
@@ -156,18 +156,18 @@ class ChatPage extends ConsumerWidget {
                           ),
                           child: Shimmer.fromColors(
                             baseColor: random.isEven
-                                ? context.theme.greyColor!.withOpacity(.3)
-                                : context.theme.greyColor!.withOpacity(.2),
+                                ? Colors.pink!.withOpacity(.3)
+                                : Colors.pink!.withOpacity(.2),
                             highlightColor: random.isEven
-                                ? context.theme.greyColor!.withOpacity(.4)
-                                : context.theme.greyColor!.withOpacity(.3),
+                                ? Colors.yellow!.withOpacity(.4)
+                                : Colors.yellow!.withOpacity(.3),
                             child: Container(
                               height: 40,
                               width: 170 +
                                   double.parse(
                                     (random * 2).toString(),
                                   ),
-                              color: Colors.red,
+                              color: Colors.white,//
                             ),
                           ),
                         ),
@@ -202,7 +202,7 @@ class ChatPage extends ConsumerWidget {
 
                       return Column(
                         children: [
-                          if (index == 0) const YellowCard(),
+                          //if (index == 0) const YellowCard(),
                           if (isShowDateCard) ShowDateCard(date: message.timeSent),
                           MessageCard(
                             isSender: isSender,

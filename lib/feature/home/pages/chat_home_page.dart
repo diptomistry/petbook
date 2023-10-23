@@ -8,6 +8,9 @@ import 'package:petbook/feature/chat/controller/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:petbook/feature/contact/pages/contact_page.dart';
+
+import '../../chat/pages/chat_page.dart';
 
 class ChatHomePage extends ConsumerWidget {
   const ChatHomePage({super.key});
@@ -34,18 +37,19 @@ class ChatHomePage extends ConsumerWidget {
               final lastMessageData = snapshot.data![index];
               return ListTile(
                 onTap: () {
-                  Navigator.pushNamed(
+                  Navigator.push(
                     context,
-                    Routes.chat,
-                    arguments: UserModel(
-                      username: lastMessageData.username,
-                      uid: lastMessageData.contactId,
-                      profileImageUrl: lastMessageData.profileImageUrl,
-                      active: true,
-                      lastSeen: 0,
-                      phoneNumber: '0',
-                      groupId: [],
-                    ),
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(user: UserModel(
+                        username: lastMessageData.username,
+                        uid: lastMessageData.contactId,
+                        profileImageUrl: lastMessageData.profileImageUrl,
+                        active: true,
+                        lastSeen: 0,
+                        phoneNumber: '0',
+                        groupId: [],
+                      ),
+                      ))
                   );
                 },
                 title: Row(
@@ -56,7 +60,7 @@ class ChatHomePage extends ConsumerWidget {
                       DateFormat.Hm().format(lastMessageData.timeSent),
                       style: TextStyle(
                         fontSize: 13,
-                        color: context.theme.greyColor,
+                        //color: context.theme.greyColor,
                       ),
                     ),
                   ],
@@ -67,7 +71,7 @@ class ChatHomePage extends ConsumerWidget {
                     lastMessageData.lastMessage,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: context.theme.greyColor),
+                    //style: TextStyle(color: context.theme.greyColor),
                   ),
                 ),
                 leading: CircleAvatar(
@@ -83,9 +87,13 @@ class ChatHomePage extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, Routes.contact);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ContactPage(), // Replace with the actual ContactPage widget.
+            ),
+          );
         },
-        child: const Icon(Icons.chat),
+        child: Icon(Icons.chat),
       ),
     );
   }

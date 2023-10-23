@@ -52,7 +52,7 @@ class _createAccState extends State<createAcc> {
       'ownerName': _ownerNameController.text,
       'email': _emailController.text,
       'ownersFb': _ownersFbController.text,
-      'userID': user.uid,
+      'uid': user.uid,
       // Add more fields as needed
     });
   }

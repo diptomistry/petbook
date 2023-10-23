@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:petbook/common/modelss/user_model.dart';
+//import 'package:petbook/common/models/user_model.dart'; // Import your UserModel definition
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petbook/common/modelss/user_model.dart';
 
 final contactsRepositoryProvider = Provider(
       (ref) {
@@ -16,46 +16,19 @@ class ContactsRepository {
 
   ContactsRepository({required this.firestore});
 
-  Future<List<List<UserModel>>> getAllContacts() async {
+  Future<List<UserModel>> getFirebaseContacts() async {
     List<UserModel> firebaseContacts = [];
-    List<UserModel> phoneContacts = [];
 
     try {
-      if (await FlutterContacts.requestPermission()) {
-        final userCollection = await firestore.collection('users').get();
-        final allContactsInThePhone = await FlutterContacts.getContacts(
-          withProperties: true,
-        );
+      final userCollection = await firestore.collection('users').get();
 
-        bool isContactFound = false;
-
-        //for (var contact in allContactsInThePhone) {
-        for (var firebaseContactData in userCollection.docs) {
-          var firebaseContact = UserModel.fromMap(firebaseContactData.data());
-          firebaseContacts.add(firebaseContact);
-          //isContactFound = true;
-          // break;
-        }
-        /*if (!isContactFound) {
-            phoneContacts.add(
-              UserModel(
-                username: contact.displayName,
-                uid: '',
-                profileImageUrl: '',
-                active: false,
-                lastSeen: 0,
-                phoneNumber: contact.phones[0].number.replaceAll(' ', ''),
-                groupId: [],
-              ),
-            );
-          }
-
-          isContactFound = false;
-        }*/
+      for (var firebaseContactData in userCollection.docs) {
+        var firebaseContact = UserModel.fromMap(firebaseContactData.data());
+        firebaseContacts.add(firebaseContact);
       }
     } catch (e) {
       log(e.toString());
     }
-    return [firebaseContacts, phoneContacts];
+    return firebaseContacts;
   }
 }

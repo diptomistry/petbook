@@ -1,21 +1,19 @@
-import 'package:petbook/common/extension/custon_theme_extension.dart';
-import 'package:petbook/common/modelss/user_model.dart';
-import 'package:petbook/common/routes/routes.dart';
-import 'package:petbook/common/utils/coloors.dart';
-import 'package:petbook/common/widgets/custom_icon_button.dart';
-import 'package:petbook/feature/contact/controller/contacts_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petbook/common/modelss/user_model.dart';
+import 'package:petbook/common/routes/routes.dart';
+import 'package:petbook/common/widgets/custom_icon_button.dart';
+import 'package:petbook/feature/chat/pages/chat_page.dart';
+import 'package:petbook/feature/contact/controller/contacts_controller.dart';
+import 'package:petbook/feature/contact/widget/contact_card.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../widget/contact_card.dart';
 
 class ContactPage extends ConsumerWidget {
   const ContactPage({super.key});
 
   shareSmsLink(phoneNumber) async {
     Uri sms = Uri.parse(
-      "sms:$phoneNumber?body=Let's chat on chatpet! it's a fast, simple, and secure app we can call each other for free. Get it at https://whatsapp.com/dl/",
+      "sms:$phoneNumber?body=Let's chat on WhatsApp! it's a fast, simple, and secure app we can call each other for free. Get it at https://whatsapp.com/dl/",
     );
     if (await launchUrl(sms)) {
     } else {}
@@ -39,7 +37,7 @@ class ContactPage extends ConsumerWidget {
             ref.watch(contactsControllerProvider).when(
               data: (allContacts) {
                 return Text(
-                  "${allContacts[0].length} contact${allContacts[0].length == 1 ? '' : 's'}",
+                  "${allContacts.length} contact${allContacts.length == 1 ? '' : 's'}",
                   style: const TextStyle(fontSize: 12),
                 );
               },
@@ -63,18 +61,10 @@ class ContactPage extends ConsumerWidget {
       body: ref.watch(contactsControllerProvider).when(
         data: (allContacts) {
           return ListView.builder(
-            itemCount: allContacts[0].length + allContacts[1].length,
+            itemCount: allContacts.length,
             itemBuilder: (context, index) {
-              late UserModel firebaseContacts;
-              late UserModel phoneContacts;
-
-              if (index < allContacts[0].length) {
-                firebaseContacts = allContacts[0][index];
-              } else {
-                phoneContacts = allContacts[1][index - allContacts[0].length];
-              }
-              return index < allContacts[0].length
-                  ? Column(
+              UserModel firebaseContact = allContacts[index];
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (index == 0)
@@ -96,10 +86,10 @@ class ContactPage extends ConsumerWidget {
                             vertical: 10,
                           ),
                           child: Text(
-                            'Contacts on Chatpet',
+                            'Contacts on ChatPet',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: context.theme.greyColor,
+                              color: Colors.grey, // Use 'Colors' instead of 'context.theme.greyColor'
                             ),
                           ),
                         ),
@@ -107,37 +97,17 @@ class ContactPage extends ConsumerWidget {
                     ),
                   ContactCard(
                     onTap: () {
-                      Navigator.pushNamed(
+                      // Create an instance of ChatPage
+                      ChatPage chatPage = ChatPage(user: firebaseContact); // Pass data as needed
+
+                      // Push the ChatPage onto the navigator stack
+                      Navigator.push(
                         context,
-                        Routes.chat,
-                        arguments: firebaseContacts,
+                        MaterialPageRoute(builder: (context) => chatPage),
                       );
                     },
-                    contactSource: firebaseContacts,
+                    contactSource: firebaseContact, // Provide the contact data to the ContactCard widget
                   ),
-                ],
-              )
-                  : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (index == allContacts[0].length)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      child: Text(
-                        'Invite to chatpet',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: context.theme.greyColor,
-                        ),
-                      ),
-                    ),
-                  ContactCard(
-                    contactSource: phoneContacts,
-                    onTap: () => shareSmsLink(phoneContacts.phoneNumber),
-                  )
                 ],
               );
             },
@@ -149,7 +119,7 @@ class ContactPage extends ConsumerWidget {
         loading: () {
           return Center(
             child: CircularProgressIndicator(
-              color: context.theme.authAppbarTextColor,
+              color: Colors.blue, // Use a color here
             ),
           );
         },
@@ -166,7 +136,7 @@ class ContactPage extends ConsumerWidget {
       contentPadding: const EdgeInsets.only(top: 10, left: 20, right: 10),
       leading: CircleAvatar(
         radius: 20,
-        backgroundColor: Coloors.greenDark,
+        backgroundColor: Colors.green, // Use 'Colors' instead of 'Coloors'
         child: Icon(
           leading,
           color: Colors.white,
@@ -180,8 +150,8 @@ class ContactPage extends ConsumerWidget {
         ),
       ),
       trailing: Icon(
-        trailing,
-        color: Coloors.greyDark,
+        trailing ?? Icons.arrow_forward, // Provide a default value
+        color: Colors.grey, // Use 'Colors' instead of 'Coloors'
       ),
     );
   }

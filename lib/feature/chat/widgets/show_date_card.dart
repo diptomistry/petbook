@@ -16,7 +16,7 @@ class ShowDateCard extends StatelessWidget {
       ),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: context.theme.receiverChatCardBg,
+        color: Colors.blue,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(

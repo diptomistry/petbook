@@ -36,9 +36,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
     HomePage(),
     HomePage(),
     CatsFact(),
-    UserList(
-      tips: "2",
-    ),
+    Homepage(),
     ProfileScreen()
   ];
   @override

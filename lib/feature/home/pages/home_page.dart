@@ -54,7 +54,7 @@ class _HomePageState extends ConsumerState<Homepage> {
             //CustomIconButton(onPressed: () {}, icon: Icons.more_vert),
           ],
           bottom: const TabBar(
-            //indicatorWeight: 3,
+            indicatorWeight: 1,
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
             splashFactory: NoSplash.splashFactory,
             tabs: [

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:petbook/common/extension/custon_theme_extension.dart';
 import 'package:petbook/common/modelss/user_model.dart';
 import 'package:flutter/material.dart';
+
 import '../../../common/utils/coloors.dart';
 
 class ContactCard extends StatelessWidget {
@@ -23,7 +24,7 @@ class ContactCard extends StatelessWidget {
         right: 10,
       ),
       leading: CircleAvatar(
-        backgroundColor: context.theme.greyColor!.withOpacity(.3),
+        backgroundColor: Colors.pink!.withOpacity(.3),
         radius: 20,
         backgroundImage: contactSource.profileImageUrl.isNotEmpty
             ? CachedNetworkImageProvider(contactSource.profileImageUrl)
@@ -47,7 +48,7 @@ class ContactCard extends StatelessWidget {
           ? Text(
         "Hey there! I'm using Chatpet",
         style: TextStyle(
-          color: context.theme.greyColor,
+          color: Colors.blue,
           fontWeight: FontWeight.w600,
         ),
       )

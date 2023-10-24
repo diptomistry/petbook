@@ -49,7 +49,7 @@ class MessageCard extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: isSender ? context.theme.senderChatCardBg : context.theme.receiverChatCardBg,
+                color: isSender ? Colors.cyanAccent : Colors.pink,
                 borderRadius: haveNip ? null : BorderRadius.circular(12),
                 boxShadow: const [
                   BoxShadow(color: Colors.black38),
@@ -93,7 +93,7 @@ class MessageCard extends StatelessWidget {
                 DateFormat.Hm().format(message.timeSent),
                 style: TextStyle(
                   fontSize: 11,
-                  color: context.theme.greyColor,
+                  color: Colors.grey,
                 ),
               )
                   : Container(
@@ -103,8 +103,8 @@ class MessageCard extends StatelessWidget {
                     begin: const Alignment(0, -1),
                     end: const Alignment(1, 1),
                     colors: [
-                      context.theme.greyColor!.withOpacity(0),
-                      context.theme.greyColor!.withOpacity(.5),
+                      Colors.grey!.withOpacity(0),
+                      Colors.grey!.withOpacity(.5),
                     ],
                   ),
                   borderRadius: const BorderRadius.only(

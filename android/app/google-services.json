@@ -44,6 +44,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:162314490059:android:d0f0431689d384be610b4e",
+        "android_client_info": {
+          "package_name": "com.example.pet_book"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162314490059-20hk52ls446klb81j2nq5fucosnntpab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVq7_-xLyfI49aBS4ZCvoVgS7PY9OGZqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162314490059-20hk52ls446klb81j2nq5fucosnntpab.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "162314490059-0cl3ipjvuh7u7glgsi5b821a0lp5adad.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.petbook"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:162314490059:android:9a6434d753797442610b4e",
         "android_client_info": {
           "package_name": "com.example.petbook"

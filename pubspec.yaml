@@ -43,7 +43,7 @@ dependencies:
   camera: ^0.10.5+3
   curved_navigation_bar: ^1.0.3
   firebase_storage: ^11.2.6
-  image_picker: ^1.0.2
+  image_picker: ^1.0.4
   flutter_native_splash: ^2.3.2
   country_picker: ^2.0.20
 

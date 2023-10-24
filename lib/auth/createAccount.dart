@@ -72,7 +72,7 @@ class _createAccState extends State<createAcc> {
 
         // Send email verification
         await user.sendEmailVerification();
-        var emailLink;
+
         print(FirebaseAuth.instance.currentUser?.emailVerified);
         if (await FirebaseAuth.instance.currentUser!.emailVerified)
           Navigator.push(
@@ -367,37 +367,13 @@ class EmailVerificationPage extends StatelessWidget {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text(
-            'Petbook',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
-          ),
-          backgroundColor: Theme.of(context).hintColor,
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushNamed(context, 'login');
-            },
-          ),
+          title: Text('Petbook'),
         ),
         body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/emailReset.png',
-                    width: 250,
-                    height: 250,
-                  ),
-                ],
-              ),
               Text(
                 'Email Verification',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -409,30 +385,21 @@ class EmailVerificationPage extends StatelessWidget {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: isEmailVerified
-                    ? () {
-                        Navigator.pushNamed(context, 'profile');
-                      }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Text(
-                  'Go to Profile',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
+                onPressed: () {
+                  // Call the registrationCallback function when the button is pressed
+                  FirebaseAuth.instance.currentUser?.reload();
+                  final user=FirebaseAuth.instance.currentUser;
+                  if(user!.emailVerified){
+                    Navigator.pushNamed(context, 'profile');
+                  }
+
+                },
+                child: Text('Go to Login'),
               ),
-              SizedBox(height: 56),
             ],
           ),
         ),
-      ),
+      )
     );
   }
 
@@ -440,3 +407,5 @@ class EmailVerificationPage extends StatelessWidget {
     return Theme.of(context).brightness == Brightness.dark;
   }
 }
+
+

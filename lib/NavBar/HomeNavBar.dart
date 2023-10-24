@@ -12,6 +12,7 @@ import 'package:petbook/message/userlist.dart';
 import 'package:petbook/profile/profile_screen.dart';
 
 import '../feature/home/pages/chat_home_page.dart';
+import '../profile1/UserProfilePage.dart';
 
 class HomeNavigationBar extends StatefulWidget {
   const HomeNavigationBar({super.key, required this.nav_Index});
@@ -33,13 +34,14 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
   }
 
   var pages = [
-    HomePage(),
+   HomePage(),
     HomePage(),
     CatsFact(),
     UserList(
       tips: "2",
     ),
-    ProfileScreen()
+    //ProfileScreen()
+    UserProfilePage()
   ];
   @override
   Widget build(BuildContext context) {

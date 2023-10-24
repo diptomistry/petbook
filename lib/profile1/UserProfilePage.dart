@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petbook/profile1/utils.dart';
 import 'package:petbook/profile1/add_data.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -139,6 +140,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 )
               ],
             ),
+            Text(
+                ''
+            ),
 
             Center(
               child: Text(
@@ -146,6 +150,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -156,49 +161,106 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 _buildInfoColumn(
                   label: 'Gender',
                   value: _userData['petGender'], // Replace with the actual gender
-                  color: Colors.blue, // Choose your desired color
+                  color: Color(0xFFDDDDDD), // Choose your desired color
                 ),
                 _buildInfoColumn(
                   label: 'Age',
                   value: _userData['petAge'], // Replace with the actual age
-                  color: Colors.green, // Choose your desired color
+                  color: Color(0xFFDDDDDD), // Choose your desired color
                 ),
                 _buildInfoColumn(
                   label: 'Weight',
                   value: _userData['petWeight'], // Replace with the actual weight
-                  color: Colors.orange, // Choose your desired color
+                  color:  Color(0xFFDDDDDD), // Choose your desired color
                 ),
               ],
             ),
             SizedBox(height: 46),
             Row(
               children: [
-                _image != null
-                    ? CircleAvatar(
-                  radius: 44,
-                  backgroundImage: MemoryImage(_image!),
-                )
-                    : const CircleAvatar(
-                  radius: 44,
-                  backgroundImage: NetworkImage(
-                      'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1693564186~exp=1693564786~hmac=34badb23f9ce7734364a431e350be4ddba450762fc9d703bf10b4dc3d9f0e96b'),
-                ),
-                SizedBox(width: 16), // Add some spacing between the CircleAvatar and the Column
-                Column(
+                Stack(
                   children: [
-                    Text(
-                      'Owner Name: ${_userData['ownerName']}',
+                    _image != null
+                        ? CircleAvatar(
+                      radius: 44,
+                      backgroundImage: MemoryImage(_image!),
+                    )
+                        : const CircleAvatar(
+                      radius: 44,
+                      backgroundImage: NetworkImage(
+                          'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?w=1380&t=st=1693564186~exp=1693564786~hmac=34badb23f9ce7734364a431e350be4ddba450762fc9d703bf10b4dc3d9f0e96b'),
                     ),
-                    Text(
-                      'Email: ${_userData['email']}',
-                    ),
-                    Text(
-                      'Owners Facebook: ${_userData['ownersFb']}',
+                    Positioned(
+                      top: 0, // Adjust the top position of the button
+                      right: 0, // Adjust the right position of the button
+                      child: IconButton(
+                        onPressed: selectImage,
+                        icon: Icon(Icons.camera_alt),
+                      ),
                     ),
                   ],
                 ),
+
+                SizedBox(width: 16), // Add some spacing between the CircleAvatar and the Column
+                Container(
+                  width: 200, // Set a fixed width for the second column
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Align column content to the start
+                    children: [
+                      Center(
+                        child: Text(
+                          '${_userData['ownerName']}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black, // Text color for the name
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // Handle the email tap action, e.g., open an email compose screen
+                          // Replace 'mailto:' with the desired email address
+                          launch('mailto:${_userData['email']}');
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.email, color: Color(0xFF00a19d)), // Email icon
+                            Text('  '), // Add some space between the icon and text
+                            Text(' ${_userData['email']}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color:  Theme.of(context).hintColor, // Text color for the name
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // Handle the Facebook tap action, e.g., open the Facebook app or website
+                          // Replace 'https://www.facebook.com/' with the actual Facebook URL
+                          launch('https://www.facebook.com/${_userData['ownersFb']}');
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.facebook, color: Color(0xFF00a19d)), // Facebook icon
+                            Text('  '), // Add some space between the icon and text
+                            Text(' ${_userData['ownersFb']}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color:  Theme.of(context).hintColor, // Text color for the name
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+
               ],
-            ),
+            )
+
 
 
 
@@ -215,26 +277,30 @@ Widget _buildInfoColumn({required String label, required String value, required 
       color: color,
       borderRadius: BorderRadius.circular(10), // Adjust the border radius
     ),
-    padding: EdgeInsets.all(16), // Increase padding for larger size
-    height: 100, // Increase height for a larger box
+    width: 100, // Set a fixed width
+    height: 100, // Set a fixed height
+    padding: EdgeInsets.all(16),
     child: Column(
       children: [
+        Text(
+            ''
+        ),
         Text(
           label,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.white, // Text color
+            color:  Color(0xFFA9ACAD), // Text color
           ),
         ),
+
+
         Text(
           value,
           style: TextStyle(
-            color: Colors.white, // Text color
+            color:  Color(0xFF00a19d), // Text color
           ),
         ),
       ],
     ),
   );
 }
-
-

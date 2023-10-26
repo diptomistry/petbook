@@ -16,22 +16,22 @@ class StoreData {
   }
 
   Future<String> saveData({
-    required String name,
-    required String bio,
+   // required String name,
+   // required String bio,
     required Uint8List file,
   }) async {
     String resp = " Some Error Occurred";
     try{
-      if(name.isNotEmpty || bio.isNotEmpty) {
+      //if(name.isNotEmpty || bio.isNotEmpty) {
         String imageUrl = await uploadImageToStorage('profileImage', file);
         await _firestore.collection('userProfile').add({
-          'name': name,
-          'bio': bio,
+         // 'name': name,
+         // 'bio': bio,
           'imageLink': imageUrl,
         });
 
         resp = 'success';
-      }
+      //}
     }
     catch(err){
       resp =err.toString();

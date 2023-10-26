@@ -2,6 +2,8 @@
 class Assets {
   Assets._();
 
+  static const String assetsAdd = 'assets/add.png';
+  static const String assetsAddFile = 'assets/add-file.png';
   static const String assetsCircle = 'assets/circle.png';
   static const String assetsDoodleBg = 'assets/doodle_bg.png';
   static const String assetsEmailReset = 'assets/emailReset.png';
@@ -12,4 +14,5 @@ class Assets {
   static const String assetsReset = 'assets/reset.png';
   static const String assetsResetBg = 'assets/resetBg.png';
   static const String assetsResetBgDark = 'assets/resetBgDark.png';
+  static const String assetsSpeechBubble = 'assets/speech-bubble.png';
 }

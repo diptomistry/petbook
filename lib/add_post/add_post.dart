@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,8 @@ class _AddPostState extends State<AddPost> {
     });
   }
 
+  bool isUploading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +42,14 @@ class _AddPostState extends State<AddPost> {
         actions: [
           InkWell(
             onTap: () async {
+              setState(() {
+                isUploading = true; // Show the progress indicator.
+              });
+              if (isUploading) {
+                Get.dialog(Center(
+                  child: CircularProgressIndicator(),
+                ));
+              }
               FirebaseFirestore firestore = FirebaseFirestore.instance;
               CollectionReference posts = firestore.collection('posts');
               User? user = FirebaseAuth.instance.currentUser;
@@ -52,24 +63,20 @@ class _AddPostState extends State<AddPost> {
                   'text': postEdit.text,
                   'time': DateTime.now(),
                 }).then((_) {
+                  setState(() {
+                    isUploading = false; // Hide the progress indicator.
+                  });
                   Get.to(HomeNavigationBar(nav_Index: 0));
                   print(" posted");
                 }).catchError((error) {
+                  setState(() {
+                    Get.back();
+                    isUploading = false; // Hide the progress indicator.
+                  });
                   print("Failed to add post: $error");
                 });
-                CollectionReference users =
-                    FirebaseFirestore.instance.collection('users');
-
-                // Update the 'userID' field in the 'users' collection
-                // await users
-                //     .doc(uid)
-                //     .set({'userID': uid}, SetOptions(merge: true)).then((_) {
-                //   print("Updated 'userID' field in 'users' collection.");
-                // }).catchError((error) {
-                //   print(
-                //       "Failed to update 'userID' field in 'users' collection: $error");
-                // });
               } else {
+                Get.back();
                 print(
                     "User is not signed in."); // Handle the case where the user is not signed in
               }
@@ -95,13 +102,15 @@ class _AddPostState extends State<AddPost> {
               height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width * 0.9,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(22),
-                child: Image.network(
-                  imageUrl ??
-                      'https://img.freepik.com/free-photo/isolated-happy-smiling-dog-white-background-portrait-4_1562-693.jpg',
-                  fit: BoxFit.fill,
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(22),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl ??
+                        'https://img.freepik.com/free-photo/isolated-happy-smiling-dog-white-background-portrait-4_1562-693.jpg',
+                    fit: BoxFit.fill,
+                    placeholder: (context, val) => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )),
             ),
           ),
           SizedBox(

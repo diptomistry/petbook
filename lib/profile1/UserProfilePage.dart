@@ -19,6 +19,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Uint8List? _image;
   late User _user;
   late DocumentSnapshot _userData;
+  bool isTextEntryVisible = false;
   bool _isEditing = false; // Variable to track editing state
   TextEditingController _petNameController = TextEditingController();
    TextEditingController _emailController = TextEditingController();
@@ -27,6 +28,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
    TextEditingController _petAgeController = TextEditingController();
    TextEditingController _petWeightController = TextEditingController();
    TextEditingController _ownerNameController = TextEditingController();
+  TextEditingController locationController= TextEditingController();
+
+
+
+  void toggleTextEntry() {
+    setState(() {
+      isTextEntryVisible = !isTextEntryVisible;
+    });
+  }
 
 
 
@@ -40,6 +50,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
      _petAgeController.dispose();
      _petWeightController.dispose();
     _ownerNameController.dispose();
+    locationController.dispose();
     super.dispose();
   }
   void selectImage() async {
@@ -179,6 +190,60 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
               ),
             ),
+            Container(
+              width: 335,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.add_location,
+                          color: Theme.of(context).hintColor,
+                        ),
+                        onPressed: () {
+                          // Toggle the visibility of the text entry when the icon is clicked
+                          toggleTextEntry();
+                        },
+                      ),
+                      if (!isTextEntryVisible)
+                        Text(
+                          'Add Location',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (isTextEntryVisible)
+                    Flexible(
+                      child: TextField(
+                        controller: locationController,
+                        decoration: InputDecoration(
+                          hintText: 'Location...',
+                          hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                        ),
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.message,
+                      size: 32, // Increase the icon size
+                      color: Colors.blue, // Change the icon color
+                    ),
+                    onPressed: () {
+
+
+
+                    },
+                  ),
+                ],
+              ),
+            ),
+
 
             SizedBox(height: 16),
             Row(
@@ -504,7 +569,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
-}
+
 
 Widget _buildInfoColumnEdit({
   required String label,
@@ -579,7 +644,7 @@ Widget _buildInfoColumn({
       ],
     ),
   );
-}
+}}
 
 
 

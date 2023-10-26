@@ -58,7 +58,7 @@ dependencies:
   uuid: ^3.0.7
   custom_clippers: ^2.0.0
   shimmer: ^3.0.0
-  audioplayers: ^5.1.0
+  audioplayers:
   get: ^4.6.5
   sizer: ^2.0.15
   record_mp3: ^3.0.0

@@ -14,6 +14,7 @@ import 'package:petbook/message/userlist.dart';
 import 'package:petbook/profile/profile_screen.dart';
 
 import '../feature/home/pages/chat_home_page.dart';
+import '../profile1/UserProfilePage.dart';
 
 class HomeNavigationBar extends StatefulWidget {
   const HomeNavigationBar({super.key, required this.nav_Index});

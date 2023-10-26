@@ -42,7 +42,10 @@ class PetbookApp extends StatelessWidget {
 }
 
  */
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:petbook/feature/auth/pages/login_page.dart';
 import 'package:petbook/feature/home/pages/chat_home_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
@@ -110,6 +113,7 @@ import 'package:petbook/feature/welcome/pages/welcome_page.dart';
 import 'package:petbook/firebase_options.dart';
 import 'package:petbook/profile1/UserProfilePage.dart';
 import 'package:petbook/profile1/profile.dart';
+import 'package:petbook/profile1/utils.dart';
 import 'NavBar/HomeNavBar.dart';
 import 'auth/homepage.dart';
 import 'auth/login.dart';
@@ -153,6 +157,9 @@ class _PetbookAppState extends State<PetbookApp> {
       _themeMode = mode;
     });
   }
+  ///
+
+  ///
 
   @override
   void initState() {

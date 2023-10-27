@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import '../add_post/add_photo.dart';
 import '../models/post.dart';
 
 class PostsController extends GetxController {
+  RxBool isLoading = false.obs;
   final RxList<Post> posts = <Post>[].obs;
   final RxList<RxInt> reactCounts = <RxInt>[].obs;
   final RxList<RxBool> isLikedList = <RxBool>[].obs;
@@ -148,7 +150,7 @@ class PostsController extends GetxController {
         // Fetch reactions for the current user and post
         final isLiked = await checkIfLiked(
             fetchedPosts[i].id, FirebaseAuth.instance.currentUser!.uid);
-        print(isLiked);
+
         isLikedList.add(isLiked.obs);
 
         // int reactionCount = await getTotalReactCountForPost(fetchedPosts[i].id);
@@ -156,6 +158,8 @@ class PostsController extends GetxController {
     } catch (e) {
       print('Error loading posts: $e');
     }
+    isLoading.toggle();
+    print('isLoading: $isLoading');
   }
 
   Future<List<Post>> getPosts() async {
@@ -245,17 +249,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late PostsController postsController;
-  bool isLoading = true;
+
   DocumentSnapshot? lastPostDocument;
   ScrollController _scrollController = ScrollController();
+
+  var _textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     postsController = Get.put(PostsController());
-    setState(() {
-      isLoading = false;
-    });
   }
 
   String formatRelativeTime(DateTime dateTime) {
@@ -286,7 +289,9 @@ class _HomePageState extends State<HomePage> {
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: RefreshIndicator(
-          onRefresh: () async {},
+          onRefresh: () async {
+            await postsController.loadPosts();
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -298,47 +303,44 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.04,
                   color: Color(0xFFFFF9C4),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(width: 20),
-                          Text(
-                            'PetBook',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddPhotoPage(),
-                                ),
-                              );
-                            },
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              size: 30,
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                        ],
+                      SizedBox(width: 20),
+                      Text(
+                        'PetBook',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
                       ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddPhotoPage(),
+                            ),
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/add-file.png',
+                          height: 27,
+                          width: 30,
+                        ),
+                      ),
+                      SizedBox(width: 20),
                     ],
                   ),
                 ),
               ),
-              Flexible(
-                  child: !isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : ListView.builder(
+              Obx(() {
+                final load = postsController.isLoading;
+                if (load.value)
+                  return Flexible(
+                      child: ListView.builder(
                           itemCount: postsController.posts.length,
                           itemBuilder: (context, index) {
                             Post post = postsController.posts[index];
@@ -378,7 +380,8 @@ class _HomePageState extends State<HomePage> {
                                                 width: 50,
                                                 height: 50,
                                                 child: Image.network(
-                                                  _user?.petPhoto ?? '',
+                                                  _user?.petPhoto ??
+                                                      'https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445',
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -431,29 +434,23 @@ class _HomePageState extends State<HomePage> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(20)),
-                                                    child: Image.network(
-                                                      post.image ??
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: post.image ??
                                                           'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg',
                                                       fit: BoxFit.cover,
-                                                      loadingBuilder: (context,
-                                                          child,
-                                                          loadingProgress) {
-                                                        if (loadingProgress ==
-                                                            null) return child;
-                                                        return Center(
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            value: loadingProgress
-                                                                        .expectedTotalBytes !=
-                                                                    null
-                                                                ? loadingProgress
-                                                                        .cumulativeBytesLoaded /
-                                                                    loadingProgress
-                                                                        .expectedTotalBytes!
-                                                                : null,
-                                                          ),
-                                                        );
-                                                      },
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          Center(
+                                                              child:
+                                                                  CircularProgressIndicator()), // Placeholder widget while loading.
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(
+                                                              Icons
+                                                                  .error_outline,
+                                                              size: 40,
+                                                              color: Colors
+                                                                  .red), // Error widget.
                                                     ),
                                                   ),
                                                 ),
@@ -501,8 +498,11 @@ class _HomePageState extends State<HomePage> {
                                                       onTap: () {
                                                         isCommenting.toggle();
                                                       },
-                                                      child: Icon(Icons
-                                                          .comment_bank_outlined),
+                                                      child: Image.asset(
+                                                        'assets/speech-bubble.png',
+                                                        height: 20,
+                                                        width: 20,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -539,6 +539,8 @@ class _HomePageState extends State<HomePage> {
                                                                     )
                                                                   ]),
                                                               child: TextField(
+                                                                controller:
+                                                                    _textController,
                                                                 decoration:
                                                                     InputDecoration(
                                                                   border:
@@ -562,6 +564,8 @@ class _HomePageState extends State<HomePage> {
                                                                           .currentUser!
                                                                           .uid,
                                                                       comment);
+                                                                  _textController
+                                                                      .clear();
                                                                   // Add a function to post the comment to Firestore
                                                                   // postComment(post.id, comment);
                                                                 },
@@ -727,7 +731,12 @@ class _HomePageState extends State<HomePage> {
                                         ]));
                               },
                             );
-                          })),
+                          }));
+                else
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+              }),
             ],
           ),
         ),

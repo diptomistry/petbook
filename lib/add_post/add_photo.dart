@@ -129,8 +129,8 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(
-            height: 49,
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.09,
           ),
           Stack(
             children: [
@@ -143,7 +143,7 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           width: MediaQuery.of(context).size.width * 0.9,
-                          height: MediaQuery.of(context).size.height * 0.7,
+                          height: MediaQuery.of(context).size.height * 0.77,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: CameraPreview(
@@ -165,7 +165,7 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                                         },
                                         child: Icon(
                                           Icons.close,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                         ),
                                       ),
                                       Spacer(),
@@ -224,14 +224,18 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                         ),
                       ),
               if (!showCamera && _imageFile != null)
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(180), // Flip horizontally
-                  child: Image.file(
-                    File(_imageFile!.path),
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.7,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 1.1,
+                  height: MediaQuery.of(context).size.height * 0.77,
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(180), // Flip horizontally
+                    child: Image.file(
+                      File(_imageFile!.path),
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.77,
+                    ),
                   ),
                 )
             ],

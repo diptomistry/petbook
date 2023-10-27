@@ -35,7 +35,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
     });
   }
 
-  var pages = [HomePage(), HomePage(), HomePage(), Homepage(), ProfileScreen()];
+  var pages = [HomePage(), HomePage(), HomePage(), Homepage(), UserProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

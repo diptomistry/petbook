@@ -11,6 +11,7 @@ class UserProfilePage extends StatefulWidget {
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 class _UserProfilePageState extends State<UserProfilePage> {
+  bool isLoved = false;
   Uint8List? _image;
   late User _user;
   late DocumentSnapshot _userData;
@@ -92,9 +93,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:AppBar(
         title: Text('Profile'),
         backgroundColor: Theme.of(context).hintColor,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu), // Replace with the icon you want for the menu
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // Open the sidebar when the menu button is clicked
+              },
+            );
+          },
+        ),
         actions: [
           if (!_isEditing)
             IconButton(
@@ -107,6 +118,93 @@ class _UserProfilePageState extends State<UserProfilePage> {
               onPressed: _saveProfile,
             ),
         ],
+      ),
+      drawer: Drawer(
+        width: 250, // Adjust the width of the sidebar
+        child: ListView(
+          children: [
+            ListTile(
+              leading: Icon(Icons.arrow_back),
+              onTap: () {
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+
+            ),
+            ListTile(
+              leading: Icon(Icons.article),
+              title: Text('Posts', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Posts" button
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.favorite),
+              title: Text('Loves', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Loves" button
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.lock),
+              title: Text('Profile Lock', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Profile Lock" button
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.circle),
+              title: Text('Active Status', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Active Status" button
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.dark_mode),
+              title: Text('Dark Mode', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Dark Mode" button
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.lock),
+              title: Text('Privacy and Security', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Privacy and Security" button
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.help),
+              title: Text('Help & Support', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Help & Support" button
+                Navigator.of(context).pop(); // Close the sidebar
+              },
+            ),
+            SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              color: Colors.grey, // Set the background color to grey
+              height: 40, // Decrease the height of the button
+              child: Center(
+                child: ListTile(
+                  title: Text('             Logout', style: TextStyle(fontSize: 18, color: Colors.black)), // Increase font size
+                  onTap: () {
+                    // Define the action for the "Logout" button
+                    Navigator.of(context).pop(); // Close the sidebar
+                    // Add your logout logic here
+                  },
+                ),
+              ),
+            ),
+
+          ],
+        ),
       ),
       body: _userData == null
           ? Center(child: CircularProgressIndicator())
@@ -161,7 +259,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   ? TextFormField(
                 controller: _petNameController,
                 decoration: InputDecoration(
-                  hintText: 'Pet Name',
+                  hintText: '   Pet Name',
                 ),
                 style: TextStyle(
                   fontSize: 24,
@@ -216,18 +314,28 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.message,
-                      size: 32, // Increase the icon size
-                      color: Colors.blue, // Change the icon color
-                    ),
-                    onPressed: () {
+                 if(!_isEditing)
+                   IconButton(
+                     icon: Icon(
+                       isLoved ? Icons.favorite : Icons.favorite_border, // Toggle between filled and outline heart icons
+                       size: 32, // Increase the icon size
+                       color: isLoved ? Theme.of(context).hintColor : Colors.black, // Change the icon color when loved
+                     ),
+                     onPressed: () {
+                       // Toggle the "love" state when the button is clicked
+                       setState(() {
+                         isLoved = !isLoved;
+                       });
 
+                       // Implement additional actions when loved/unloved
+                       if (isLoved) {
+                         // Perform an action when loved (e.g., add to favorites)
+                       } else {
+                         // Perform an action when unloved (e.g., remove from favorites)
+                       }
+                     },
+                   )
 
-
-                    },
-                  ),
                 ],
               ),
             ),
@@ -402,10 +510,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               TextFormField(
                                 controller: _ownerNameController,
                                 decoration: InputDecoration(
-                                  hintText: 'Edit Owner Name',
+                                  hintText: 'Owner Name...',
                                 ),
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+
                                   color: Colors.black,
                                 ),
                               )
@@ -421,10 +529,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               TextFormField(
                                 controller: _emailController,
                                 decoration: InputDecoration(
-                                  hintText: 'Edit Email',
+                                  hintText: 'Email...',
                                 ),
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+
                                   color: Colors.black,
                                 ),
                               )
@@ -444,10 +552,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               TextFormField(
                                 controller: _ownersFbController,
                                 decoration: InputDecoration(
-                                  hintText: 'Edit Facebook',
+                                  hintText: 'Facebook...',
                                 ),
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+
                                   color: Colors.black,
                                 ),
                               )

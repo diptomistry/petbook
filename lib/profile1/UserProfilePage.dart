@@ -13,6 +13,7 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePageState extends State<UserProfilePage> {
   bool isLoved = false;
   Uint8List? _image;
+  Uint8List? _image2;
   late User _user;
   late DocumentSnapshot _userData;
   bool isTextEntryVisible = false;
@@ -52,6 +53,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       _image = img;
+    });
+  }
+  void selectImage2() async {
+    Uint8List img2 = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image2 = img2;
     });
   }
   @override
@@ -188,20 +195,42 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             SizedBox(height: 16),
             Container(
-              width: double.infinity,
-              color: Colors.grey, // Set the background color to grey
-              height: 40, // Decrease the height of the button
-              child: Center(
-                child: ListTile(
-                  title: Text('             Logout', style: TextStyle(fontSize: 18, color: Colors.black)), // Increase font size
-                  onTap: () {
-                    // Define the action for the "Logout" button
-                    Navigator.of(context).pop(); // Close the sidebar
-                    // Add your logout logic here
-                  },
-                ),
+              width: 300,
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    //button in the whole row
+                    child: ElevatedButton(
+                      onPressed:(){},
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .secondary),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:Colors.grey,
+                        // Customize the button color
+                        // foregroundColor: Colors.red,
+                        // Customize the text color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(
+                              color: Colors.blueGrey, width: 0.6),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+
+
+
 
           ],
         ),
@@ -475,10 +504,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   children: [
                     Stack(
                       children: [
-                        _image != null && _isEditing
+                        _image2 != null && _isEditing
                             ? CircleAvatar(
                           radius: 44,
-                          backgroundImage: MemoryImage(_image!),
+                          backgroundImage: MemoryImage(_image2!),
                         )
                             : const CircleAvatar(
                           radius: 44,
@@ -490,7 +519,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             bottom: -10, // Adjust the top position of the button
                             right: -15, // Adjust the right position of the button
                             child: IconButton(
-                              onPressed: selectImage,
+                              onPressed: selectImage2,
                               icon: Icon(
                                 Icons.add_a_photo,
                                 size: 18,

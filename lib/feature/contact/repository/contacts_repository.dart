@@ -23,7 +23,7 @@ class ContactsRepository {
       final userCollection = await firestore.collection('userss').get();
       for (var firebaseContactData in userCollection.docs) {
         var firebaseContact = UserModel.fromMap(firebaseContactData.data());
-        firebaseContacts.add(firebaseContact);
+        firebaseContacts.add(firebaseContact) ;
       }
     } catch (e) {
       log(e.toString());

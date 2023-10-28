@@ -15,7 +15,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Uint8List? _image;
   Uint8List? _image2;
   late User _user;
-  late DocumentSnapshot _userData;
+   DocumentSnapshot? _userData;
   bool isTextEntryVisible = false;
   bool _isEditing = false; // Variable to track editing state
   TextEditingController _petNameController = TextEditingController();
@@ -297,7 +297,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
               )
                   : Text(
-                _userData['petName'],
+                _userData?['petName']??'',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -377,7 +377,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 if(!_isEditing)
                   _buildInfoColumn(
                     label: 'Gender',
-                    value:  _userData['petGender'],
+                    value:  _userData?['petGender']??'',
                     color: Color(0xFFDDD8AE),
                   ),
                 if(_isEditing)
@@ -389,7 +389,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 if(!_isEditing)
                   _buildInfoColumn(
                     label: 'Age',
-                    value:  _userData['petAge'],
+                    value:  _userData?['petAge']??'',
                     color: Color(0xFFDDD8AE),
                   ),
                 if(_isEditing)
@@ -400,7 +400,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 if(!_isEditing)
                   _buildInfoColumn(
                     label: 'Weight',
-                    value: _userData['petWeight'],
+                    value: _userData?['petWeight']??'',
                     color: Color(0xFFDDD8AE),
                   ),
                 if(_isEditing)
@@ -449,7 +449,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${_userData['ownerName']}',
+                              '${_userData?['ownerName']??''}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -462,7 +462,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        launch('mailto:${_userData['email']}');
+                        launch('mailto:${_userData?['email']??''}');
                       },
                       child: Container(
                         height: 50,
@@ -479,7 +479,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        launch('https://www.facebook.com/${_userData['ownersFb']}');
+                        launch('https://www.facebook.com/${_userData?['ownersFb']??''}');
                       },
                       child: Container(
                         height: 50,
@@ -548,7 +548,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               )
                             else
                               Text(
-                                _userData['ownerName'],
+                                _userData?['ownerName']??'',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -568,10 +568,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             else
                               GestureDetector(
                                 onTap: () {
-                                  launch('mailto:${_userData['email']}');
+                                  launch('mailto:${_userData?['email']??''}');
                                 },
                                 child: Text(
-                                  _userData['email'],
+                                  _userData?['email']??'',
                                   style: TextStyle(
                                     color: Color(0xFF00a19d),
                                   ),
@@ -591,10 +591,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             else
                               GestureDetector(
                                 onTap: () {
-                                  launch('https://www.facebook.com/${_userData['ownersFb']}');
+                                  launch('https://www.facebook.com/${_userData?['ownersFb']??''}');
                                 },
                                 child: Text(
-                                  _userData['ownersFb'],
+                                  _userData?['ownersFb']??'',
                                   style: TextStyle(
                                     color: Color(0xFF00a19d),
                                   ),

@@ -47,6 +47,7 @@ import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petbook/feature/auth/pages/login_page.dart';
+import 'package:petbook/feature/contact/pages/contact_page.dart';
 import 'package:petbook/feature/home/pages/chat_home_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
 import 'package:petbook/common/routes/routes.dart';
@@ -58,6 +59,10 @@ import 'package:petbook/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /*void main() async {
@@ -86,8 +91,8 @@ class MyApp extends ConsumerWidget {
       home: ref.watch(userInfoAuthProvider).when(
         data: (user) {
           FlutterNativeSplash.remove();
-          //if (user == null) return const WelcomePage();
-          return const Homepage();
+          if (user == null) return const WelcomePage();
+          return  Homepage();
         },
         error: (error, trace) {
           return const Scaffold(
@@ -101,8 +106,7 @@ class MyApp extends ConsumerWidget {
       onGenerateRoute: Routes.onGenerateRoute,
     );
   }
-}
- */
+}*/
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -131,18 +135,7 @@ void main() async {
     ),
   );
 }
-/*void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp(
-    //options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(
-     ProviderScope(
-      child: PetbookApp(),
-    ),
-  );
-}*/
+
 
 class PetbookApp extends StatefulWidget {
   @override
@@ -233,3 +226,6 @@ class _PetbookAppState extends State<PetbookApp> {
     );
   }
 }
+
+
+

@@ -18,10 +18,9 @@ class ContactsRepository {
 
   Future<List<UserModel>> getFirebaseContacts() async {
     List<UserModel> firebaseContacts = [];
-
+    //print("hello");
     try {
-      final userCollection = await firestore.collection('users').get();
-
+      final userCollection = await firestore.collection('userss').get();
       for (var firebaseContactData in userCollection.docs) {
         var firebaseContact = UserModel.fromMap(firebaseContactData.data());
         firebaseContacts.add(firebaseContact);

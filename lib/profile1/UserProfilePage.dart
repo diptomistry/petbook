@@ -754,6 +754,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:petbook/profile1/updateProfile.dart';
 import 'package:petbook/profile1/utils.dart';
 import 'package:petbook/profile1/add_data.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -762,6 +763,8 @@ class UserProfilePage extends StatefulWidget {
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 class _UserProfilePageState extends State<UserProfilePage> {
+
+
   String? _userImageUrl;
   String? _userImage2Url;
   bool isLoved = false;
@@ -818,19 +821,30 @@ class _UserProfilePageState extends State<UserProfilePage> {
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
+    print("Initiating user data fetch...");
     _fetchUserData();
   }
   Future<void> _fetchUserData() async {
-    DocumentSnapshot userData =
-    await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
-    setState(() {
-      _userData = userData;
-      //_userImageUrl = userData['imageLink'];
-      //_userImage2Url = userData['imageLink'];
+    if (_user == null) {
+      print("User is not signed in.");
+      return;
+    }
+    else
+      print("User is not in.");
 
-
-    });
+    try {
+      DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+      setState(() {
+        _userData = userData;
+       // print("a:$_userData");
+        //_userImageUrl = userData['imageLink'];
+       // print("a:$_userImageUrl");
+      });
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
   }
+
   void _editProfile() {
     setState(() {
       _isEditing = true;
@@ -838,6 +852,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   }
   Future<void> _saveProfile() async {
+
     Future<void> _fetchUserData() async {
       DocumentSnapshot userData =
       await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
@@ -860,7 +875,20 @@ class _UserProfilePageState extends State<UserProfilePage> {
       await StoreData().saveData(userEmail: userEmail, file: _image!);
       // You can add additional logic here if needed
     }
+
+    Navigator.push(
+      context,
+     MaterialPageRoute(builder: (context) => updateProfilePage()),
+    ).then((value) {
+      setState(() {
+        _isEditing = false;
+      });
+      _fetchUserData(); // Fetch updated user data after editing
+    });
   }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

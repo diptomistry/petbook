@@ -14,6 +14,58 @@ class StoreData {
     return downloadUrl;
   }
 
+  Future<void> saveData({
+    required String userEmail,
+    required Uint8List file1, // First image
+    required Uint8List file2,
+    required String petName,
+    required String petGender,
+    required String petAge,
+    required String petWeight,
+    //required String email,
+    required String ownersFb,
+    required String ownerName,// Second image
+  }) async {
+    try {
+      // Upload the first image
+      String imageUrl = await uploadImageToStorage('profileImage1', file1);
+
+      // Upload the second image
+      String imageUrl2 = await uploadImageToStorage('profileImage2', file2);
+
+      // Query Firestore to find the document with a matching email
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: userEmail)
+          .get();
+
+      // Check if a document was found
+      if (querySnapshot.docs.isNotEmpty) {
+        // Update the existing document with the imageLink fields
+        DocumentReference docRef = querySnapshot.docs.first.reference;
+        await docRef.update({
+          'petName': petName,
+          'imageLink': imageUrl,
+          'imageLink2': imageUrl2,
+          'petGender': petGender,
+           'petAge':petAge,
+          'petWeight':petWeight,
+          //'email':email,
+          'ownersFb':ownersFb,
+          'ownerName':ownerName,
+
+
+
+
+        });
+
+      }
+    } catch (err) {
+      print(err.toString());
+    }
+  }
+}
+
 //   Future<void> saveData({
 //     required String userEmail,
 //     required Uint8List file,
@@ -38,38 +90,6 @@ class StoreData {
 //     }
 //   }
 // }
-  Future<void> saveData({
-    required String userEmail,
-    required Uint8List file1, // First image
-    required Uint8List file2, // Second image
-  }) async {
-    try {
-      // Upload the first image
-      String imageUrl = await uploadImageToStorage('profileImage1', file1);
-
-      // Upload the second image
-      String imageUrl2 = await uploadImageToStorage('profileImage2', file2);
-
-      // Query Firestore to find the document with a matching email
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('users')
-          .where('email', isEqualTo: userEmail)
-          .get();
-
-      // Check if a document was found
-      if (querySnapshot.docs.isNotEmpty) {
-        // Update the existing document with the imageLink fields
-        DocumentReference docRef = querySnapshot.docs.first.reference;
-        await docRef.update({
-          'imageLink': imageUrl,
-          'imageLink2': imageUrl2,
-        });
-      }
-    } catch (err) {
-      print(err.toString());
-    }
-  }
-}
 /*
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';

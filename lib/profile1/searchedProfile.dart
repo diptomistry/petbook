@@ -1,15 +1,25 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileSearch extends StatelessWidget {
+class ProfileSearch extends StatefulWidget {
   final DocumentSnapshot userData;
 
   ProfileSearch({required this.userData});
 
   @override
+  _ProfileSearchState createState() => _ProfileSearchState();
+}
+
+class _ProfileSearchState extends State<ProfileSearch> {
+  bool isLoved = false;
+
+  @override
   Widget build(BuildContext context) {
+    final userData = widget.userData; // Access the user data from the widget
+
     return Scaffold(
       appBar: AppBar(
         title: Text(userData['petName'] ?? 'User Profile'),
@@ -43,18 +53,85 @@ class ProfileSearch extends StatelessWidget {
               ],
             ),
             SizedBox(height: 16),
-            Center(
-              child: Text(
-                userData['petName'] ?? '',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 40), // Adjust the left padding as needed
+                    child: Text(
+                      userData['petName'] ?? '',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () {
+                    // Add your onPressed action here
+                    // For example, you can launch a messenger app or perform some other action.
+                  },
+                  child: SvgPicture.asset(
+                    'assets/messenger.svg', // Provide the path to your SVG file
+                    color: Theme.of(context).hintColor, // Customize the icon color
+                    height: 40, // Customize the icon size
+                    width: 40, // Customize the icon size
+                  ),
+                ),
+                Text('      '),
+              ],
             ),
+
+
+
+
+
             SizedBox(height: 16),
-            Text('Location: ${userData['location'] ?? 'N/A'}'),
+            Row(
+              children: [
+                SizedBox(width: 3),
+                Icon(
+                  Icons.location_on, // Use the location icon
+                  color: Theme.of(context).hintColor, // Customize the icon color
+                  size: 30, // Customize the icon size
+                ),
+                SizedBox(width: 8), // Add spacing between the icon and text
+                Text(
+                  '${userData['location'] ?? 'N/A'}',
+                  style: TextStyle(fontSize: 16), // Customize the text style
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(
+                        isLoved ? Icons.favorite : Icons.favorite_border, // Toggle between filled and outline heart icons
+                        size: 40, // Increase the icon size
+                        color: isLoved ? Theme.of(context).hintColor : Colors.black, // Change the icon color when loved
+                      ),
+                      onPressed: () {
+                        // Toggle the "love" state when the button is clicked
+                        setState(() {
+                          isLoved = !isLoved;
+                        });
+
+                        // Implement additional actions when loved/unloved
+                        if (isLoved) {
+                          // Perform an action when loved (e.g., add to favorites)
+                        } else {
+                          // Perform an action when unloved (e.g., remove from favorites)
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                Text('      '),
+              ],
+            ),
+
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

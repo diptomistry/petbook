@@ -14,12 +14,41 @@ class StoreData {
     return downloadUrl;
   }
 
+//   Future<void> saveData({
+//     required String userEmail,
+//     required Uint8List file,
+//   }) async {
+//     try {
+//       String imageUrl = await uploadImageToStorage('profileImage', file);
+//
+//       // Query Firestore to find the document with a matching email
+//       QuerySnapshot querySnapshot = await _firestore
+//           .collection('users')
+//           .where('email', isEqualTo: userEmail)
+//           .get();
+//
+//       // Check if a document was found
+//       if (querySnapshot.docs.isNotEmpty) {
+//         // Update the existing document with the imageLink field
+//         DocumentReference docRef = querySnapshot.docs.first.reference;
+//         await docRef.update({'imageLink': imageUrl});
+//       }
+//     } catch (err) {
+//       print(err.toString());
+//     }
+//   }
+// }
   Future<void> saveData({
     required String userEmail,
-    required Uint8List file,
+    required Uint8List file1, // First image
+    required Uint8List file2, // Second image
   }) async {
     try {
-      String imageUrl = await uploadImageToStorage('profileImage', file);
+      // Upload the first image
+      String imageUrl = await uploadImageToStorage('profileImage1', file1);
+
+      // Upload the second image
+      String imageUrl2 = await uploadImageToStorage('profileImage2', file2);
 
       // Query Firestore to find the document with a matching email
       QuerySnapshot querySnapshot = await _firestore
@@ -29,9 +58,12 @@ class StoreData {
 
       // Check if a document was found
       if (querySnapshot.docs.isNotEmpty) {
-        // Update the existing document with the imageLink field
+        // Update the existing document with the imageLink fields
         DocumentReference docRef = querySnapshot.docs.first.reference;
-        await docRef.update({'imageLink': imageUrl});
+        await docRef.update({
+          'imageLink': imageUrl,
+          'imageLink2': imageUrl2,
+        });
       }
     } catch (err) {
       print(err.toString());

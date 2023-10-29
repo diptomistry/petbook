@@ -837,7 +837,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
       setState(() {
         _userData = userData;
        // print("a:$_userData");
-        //_userImageUrl = userData['imageLink'];
+        _userImageUrl = userData['imageLink'];
+        _userImage2Url = userData['imageLink2'];
        // print("a:$_userImageUrl");
       });
     } catch (e) {
@@ -859,7 +860,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
       setState(() {
         //_userData = userData;
         _userImageUrl = userData['imageLink'];
-        _userImage2Url = userData['imageLink'];
+        _userImage2Url = userData['imageLink2'];
+        print(_userImageUrl);
 
 
       });
@@ -872,9 +874,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
     // You can use _userData to update the Firebase document
     String? userEmail = _user.email; // Get the user's email
     if (userEmail != null && _image != null) {
-      await StoreData().saveData(userEmail: userEmail, file: _image!);
+      await StoreData().saveData(userEmail: userEmail, file1: _image!, file2: _image2!);
       // You can add additional logic here if needed
     }
+
 
     Navigator.push(
       context,

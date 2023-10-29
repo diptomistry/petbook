@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:petbook/profile1/searchedProfile.dart';
+// Import your profile_search.dart file
 
 class ProfileSearchPage extends StatefulWidget {
   @override
@@ -41,7 +43,7 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
           return ListTile(
             leading: CircleAvatar(
               backgroundImage: CachedNetworkImageProvider(userData['imageLink'] ??
-              'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg'),
+                  'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg'),
             ),
             title: Text(userData['petName'] ?? ''),
             subtitle: Text(userData['ownerName'] ?? ''),
@@ -49,42 +51,12 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => profileserch(userData: userData),
+                  builder: (context) => ProfileSearch(userData: userData), // Use the ProfileSearch widget
                 ),
               );
             },
           );
         },
-      ),
-    );
-  }
-}
-
-class profileserch extends StatelessWidget {
-  final DocumentSnapshot userData;
-
-  profileserch({required this.userData});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(userData['petName'] ?? 'User Profile'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(userData['imageLink'] ??
-                  'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg'),
-              radius: 50,
-            ),
-            Text(userData['petName'] ?? 'Pet Name'),
-            Text(userData['ownerName'] ?? 'Owner Name'),
-            // Add more user data fields to display
-          ],
-        ),
       ),
     );
   }

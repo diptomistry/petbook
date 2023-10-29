@@ -103,6 +103,41 @@ class _UserProfilePageState extends State<UserProfilePage> {
     });
 
   }
+
+  Future<void> _updateLocation(String location) async {
+    try {
+      String? userEmail = _user.email;
+      if (userEmail != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: userEmail)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentReference docRef = querySnapshot.docs.first.reference;
+          await docRef.update({
+            'location': location,
+          });
+        }
+      }
+    } catch (err) {
+      print(err.toString());
+    }
+  }
+  Future<String?> _fetchLocation() async {
+    String? location;
+    if (_user != null) {
+      try {
+        DocumentSnapshot userData =
+        await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+        location = userData['location'];
+      } catch (e) {
+        print("Error fetching location data: $e");
+      }
+    }
+    return location;
+  }
+
   Future<void> _saveProfile() async {
 
     Future<void> _fetchUserData() async {
@@ -401,10 +436,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       ),
                       if (!isTextEntryVisible)
                         Text(
-                          'Add Location',
+                          _userData?['location']??'Add Location',
+
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey,
+                            color: Colors.black,
                           ),
                         ),
                     ],
@@ -418,8 +454,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           hintStyle: TextStyle(color: Theme.of(context).hintColor),
                         ),
                         style: TextStyle(color: Colors.black),
+                        onSubmitted: (location) async {
+                          await _updateLocation(location);
+                          toggleTextEntry();
+                          await _fetchUserData();
+                          // Fetch updated user data including the location
+                          //String? updatedLocation = await _fetchLocation();
+                          //locationController.text = updatedLocation ?? '';
+                        },
                       ),
                     ),
+
+
                   if(!_isEditing)
                     IconButton(
                       icon: Icon(
@@ -695,7 +741,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   ],
                 ),
               ),
-
+            
 
               SizedBox(height: 16),
 
@@ -736,6 +782,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 }
+
+
 
 
 Widget _buildInfoColumnEdit({

@@ -101,7 +101,7 @@ class _ImagePickerPageState extends State<ImagePickerPage> {
         title: Text(
           '',
           style: TextStyle(
-            color: context.theme.authAppbarTextColor,
+            color: Colors.pink,
           ),
         ),
         actions: [

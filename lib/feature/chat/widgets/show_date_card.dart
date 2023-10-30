@@ -16,11 +16,15 @@ class ShowDateCard extends StatelessWidget {
       ),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: Colors.orangeAccent,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         DateFormat.yMMMd().format(date),
+        style: const TextStyle(
+          fontSize: 12,
+          color: Colors.white,
+        ),
       ),
     );
   }

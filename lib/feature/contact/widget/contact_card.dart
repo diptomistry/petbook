@@ -33,7 +33,7 @@ class ContactCard extends StatelessWidget {
             ? const Icon(
           Icons.person,
           size: 30,
-          color: Colors.white,
+          color: Colors.orangeAccent,
         )
             : null,
       ),
@@ -42,6 +42,7 @@ class ContactCard extends StatelessWidget {
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
+          color: Colors.orangeAccent,
         ),
       ),
       subtitle: contactSource.uid.isNotEmpty

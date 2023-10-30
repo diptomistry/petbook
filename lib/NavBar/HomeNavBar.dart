@@ -11,7 +11,6 @@ import 'package:petbook/feature/home/pages/call_home_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
 import 'package:petbook/feature/welcome/pages/welcome_page.dart';
 import 'package:petbook/message/userlist.dart';
-import 'package:petbook/profile/profile_screen.dart';
 
 import '../feature/home/pages/chat_home_page.dart';
 import '../profile1/UserProfilePage.dart';
@@ -36,7 +35,13 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
     });
   }
 
-  var pages = [HomePage(), ProfileSearchPage(), HomePage(), Homepage(), UserProfilePage()];
+  var pages = [
+    HomePage(),
+    ProfileSearchPage(),
+    HomePage(),
+    Homepage(),
+    UserProfilePage()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

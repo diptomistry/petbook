@@ -14,7 +14,7 @@ A Flutter application for pet lovers to connect, share, and discover pet-related
 
 ## Screenshots
 
-![Screenshot 1](<insert-screenshot-url-1-here>)
+![Screenshot 1](<https://ibb.co/Xpxdbtf>)
 ![Screenshot 2](<insert-screenshot-url-2-here>)
 ![Screenshot 3](<insert-screenshot-url-3-here>)
 
@@ -27,4 +27,13 @@ A Flutter application for pet lovers to connect, share, and discover pet-related
 ## Getting Started
 
 To run the app on your local machine, use the following command:
+
+## Contributing
+
+We welcome contributions from the community. If you'd like to contribute to PetBook, please follow our [contribution guidelines](CONTRIBUTING.md).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
 

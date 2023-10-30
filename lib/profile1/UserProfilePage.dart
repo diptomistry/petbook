@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,8 @@ class UserProfilePage extends StatefulWidget {
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 class _UserProfilePageState extends State<UserProfilePage> {
+  bool isMarkedForAdoption = false;
+  String forAdoptionStatus = 'Mark for Adoption';
 
 
   String? _userImageUrl;
@@ -22,7 +23,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Uint8List? _image;
   Uint8List? _image2;
   late User _user;
-   DocumentSnapshot? _userData;
+  DocumentSnapshot? _userData;
   bool isTextEntryVisible = false;
   bool _isEditing = false; // Variable to track editing state
   TextEditingController _petNameController = TextEditingController();
@@ -56,6 +57,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     locationController.dispose();
     super.dispose();
   }
+
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
@@ -71,10 +73,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   void initState() {
     super.initState();
+    //checkForAdoptionStatus();
     _user = FirebaseAuth.instance.currentUser!;
     print("Initiating user data fetch...");
     _fetchUserData();
   }
+
   Future<void> _fetchUserData() async {
     if (_user == null) {
       print("User is not signed in.");
@@ -87,10 +91,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
       DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
       setState(() {
         _userData = userData;
-       // print("a:$_userData");
+        // print("a:$_userData");
         _userImageUrl = userData['imageLink'];
         _userImage2Url = userData['imageLink2'];
-       // print("a:$_userImageUrl");
+        // print("a:$_userImageUrl");
       });
     } catch (e) {
       print("Error fetching user data: $e");
@@ -191,7 +195,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
     Navigator.push(
       context,
-     MaterialPageRoute(builder: (context) => updateProfilePage()),
+      MaterialPageRoute(builder: (context) => updateProfilePage()),
     ).then((value) {
       setState(() {
         _isEditing = false;
@@ -741,40 +745,108 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   ],
                 ),
               ),
-            
 
-              SizedBox(height: 16),
 
-              Container(
-                width: 335,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          // Define the action for marking the pet for adoption
-                        },
-                        icon: Icon(Icons.pets),
-                        label: Text(
-                          'Mark for Adoption',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
+            SizedBox(height: 16),
+            FutureBuilder<DocumentSnapshot>(
+
+              future: FirebaseFirestore.instance.collection('users').doc(_userData?.id).get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // While waiting for data, show a loading indicator.
+                } else {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final user = snapshot.data?.data() as Map<String, dynamic>?;
+                    //if (user?['forAdoption'] == 'yes')isMarkedForAdoption=false;
+                    //else
+                    //  isMarkedForAdoption=true;
+
+                    // Check if the 'forAdoption' field is 'yes'
+                    if (user?['forAdoption'] == 'yes') {
+                      return  Container(
+                        width: 335,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: ()async {
+                                  setState(() {
+                                    isMarkedForAdoption =!isMarkedForAdoption; // Toggle adoption status
+                                  });
+                                  final userDoc = FirebaseFirestore.instance.collection('users').doc(_userData?.id);
+                                  await userDoc.update({
+                                    'forAdoption': isMarkedForAdoption ? 'yes' : 'no',
+                                  });
+                                 // await markForAdoption(isMarkedForAdoption);
+                                },
+                                icon: Icon(Icons.pets),
+                                label: Text(
+                                  '${_userData?['petName']} is marked for adoption', // Show the status text here
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).hintColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: BorderSide(color: Colors.blueGrey, width: 0.6),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).hintColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: Colors.blueGrey, width: 0.6),
-                          ),
+                      );
+                    } else {
+                      return Container(
+                        width: 335,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: ()async {
+                                  setState(() {
+                                    isMarkedForAdoption =!isMarkedForAdoption; // Toggle adoption status
+                                  });
+                                  final userDoc = FirebaseFirestore.instance.collection('users').doc(_userData?.id);
+                                  await userDoc.update({
+                                    'forAdoption': isMarkedForAdoption ? 'yes' : 'no',
+                                  });
+                                  // await markForAdoption(isMarkedForAdoption);
+                                },
+                                icon: Icon(Icons.pets),
+                                label: Text(
+                                  'Mark for adoption', // Show the status text here
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).hintColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: BorderSide(color: Colors.blueGrey, width: 0.6),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+
+
 
           ],
         ),

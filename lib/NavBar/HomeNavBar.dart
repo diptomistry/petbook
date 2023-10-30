@@ -5,9 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:petbook/NewsFeed/HomePage.dart';
 import 'package:petbook/add_post/add_photo.dart';
 
-import 'package:petbook/feature/auth/pages/login_page.dart';
-import 'package:petbook/feature/contact/pages/contact_page.dart';
-import 'package:petbook/feature/home/pages/call_home_page.dart';
 import 'package:petbook/feature/home/pages/home_page.dart';
 import 'package:petbook/feature/welcome/pages/welcome_page.dart';
 import 'package:petbook/message/userlist.dart';

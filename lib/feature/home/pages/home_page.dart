@@ -27,7 +27,7 @@ class _HomePageState extends ConsumerState<Homepage> {
     updateUserPresence();
     timer = Timer.periodic(
       const Duration(minutes: 1),
-          (timer) => setState(() {}),
+      (timer) => setState(() {}),
     );
     super.initState();
   }
@@ -41,11 +41,12 @@ class _HomePageState extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 1,
       child: Scaffold(
         appBar: AppBar(
+          leading: Container(),
           title: const Text(
-            'Chatpet',
+            'PetBook',
             style: TextStyle(letterSpacing: 1),
           ),
           elevation: 1,
@@ -53,18 +54,16 @@ class _HomePageState extends ConsumerState<Homepage> {
             //CustomIconButton(onPressed: () {}, icon: Icons.search),
             //CustomIconButton(onPressed: () {}, icon: Icons.more_vert),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             indicatorWeight: 1,
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
             splashFactory: NoSplash.splashFactory,
             tabs: [
               Tab(text: 'MESSAGES'),
-              // Tab(text: 'STATUS'),
-              //Tab(text: 'CALLS'),
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             ChatHomePage(),
             //StatusHomePage(),

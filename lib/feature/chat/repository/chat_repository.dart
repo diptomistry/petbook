@@ -35,10 +35,11 @@ class ChatRepository {
       final timeSent = DateTime.now();
       final messageId = const Uuid().v1();
 
-      final imageUrl = await ref.read(firebaseStorageRepositoryProvider).storeFileToFirebase(
-        'chats/${messageType.type}/${senderData.uid}/$receiverId/$messageId',
-        file,
-      );
+      final imageUrl =
+          await ref.read(firebaseStorageRepositoryProvider).storeFileToFirebase(
+                'chats/${messageType.type}/${senderData.uid}/$receiverId/$messageId',
+                file,
+              );
       final userMap = await firestore.collection('users').doc(receiverId).get();
       final receverUserData = UserModel.fromMap(userMap.data()!);
 
@@ -109,10 +110,17 @@ class ChatRepository {
         .collection('chats')
         .snapshots()
         .asyncMap((event) async {
+      print(event.docs.length);
       List<LastMessageModel> contacts = [];
       for (var document in event.docs) {
+        print(document.data());
         final lastMessage = LastMessageModel.fromMap(document.data());
-        final userData = await firestore.collection('users').doc(lastMessage.contactId).get();
+        final userData = await firestore
+            .collection('users')
+            .doc(lastMessage.contactId)
+            .get();
+        print(lastMessage.contactId);
+        print(userData.data());
         final user = UserModel.fromMap(userData.data()!);
         contacts.add(
           LastMessageModel(
@@ -136,7 +144,8 @@ class ChatRepository {
   }) async {
     try {
       final timeSent = DateTime.now();
-      final receiverDataMap = await firestore.collection('users').doc(receiverId).get();
+      final receiverDataMap =
+          await firestore.collection('users').doc(receiverId).get();
       final receiverData = UserModel.fromMap(receiverDataMap.data()!);
       final textMessageId = const Uuid().v1();
 

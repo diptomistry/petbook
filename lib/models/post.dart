@@ -59,7 +59,7 @@ class PetUser {
       ownerName: data['ownerName'] ?? '',
       email: data['email'] ?? '',
       ownersFb: data['ownersFb'] ?? '',
-      petPhoto: data['profileImageUrl'] ??
+      petPhoto: data['imageLink'] ??
           'https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445',
     );
   }

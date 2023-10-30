@@ -302,6 +302,8 @@ class _MyLoginState extends State<MyLogin> {
  */
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -324,6 +326,11 @@ class _MyLoginState extends State<MyLogin> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   login() async {
+    Get.dialog(SizedBox(
+      height: 50,
+      width: 50,
+      child: Center(child: CircularProgressIndicator()),
+    ));
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     try {
       final UserCredential userCredential =
@@ -336,9 +343,11 @@ class _MyLoginState extends State<MyLogin> {
       FirebaseAuth.instance.authStateChanges().listen((User? uuser) {
         if (uuser != null) {
           if (uuser.emailVerified) {
+            Get.back();
             // Navigate to the home screen if the email is verified
             Navigator.pushNamed(context, 'home');
           } else {
+            Get.back();
             // If email is not verified, show a message to the user
             setState(() {
               errorMessage = 'Please verify your email address.';
@@ -347,10 +356,12 @@ class _MyLoginState extends State<MyLogin> {
           // The user is signed in; you can access the user's information here.
           // Update your UI accordingly.
         } else {
+          Get.back();
           // The user is signed out; update your UI accordingly.
         }
       });
     } catch (e) {
+      Get.back();
       setState(() {
         errorMessage = 'Invalid email or password or something wrong';
       });

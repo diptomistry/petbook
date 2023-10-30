@@ -219,25 +219,28 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                         ),
                       )
                     : const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.purple,
-                        ),
+                        child: CircularProgressIndicator(),
                       ),
-              if (!showCamera && _imageFile != null)
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 1.1,
-                  height: MediaQuery.of(context).size.height * 0.77,
-                  child: Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.rotationY(180), // Flip horizontally
-                    child: Image.file(
-                      File(_imageFile!.path),
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.77,
-                    ),
-                  ),
-                )
+              if (!showCamera)
+                _imageFile != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.height * 0.77,
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform:
+                              Matrix4.rotationY(180), // Flip horizontally
+                          child: Image.file(
+                            File(_imageFile!.path),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                    : CircularProgressIndicator()
             ],
           ),
           SizedBox(
@@ -254,7 +257,7 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                   }
                 },
                 child: Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width * 0.37,
                   child: Center(
                     child: Text(
                       showCamera ? 'Switch to Gallery' : 'Choose from Gallery',
@@ -280,10 +283,17 @@ class _AddPhotoPageState extends State<AddPhotoPage> {
                   } else {
                     // Allow uploading the image only if not in camera mode
                     _savePhoto();
+                    Get.dialog(SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ));
                   }
                 },
                 child: Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width * 0.37,
                   child: Center(
                     child: Text(
                       showCamera ? 'Take a Photo' : 'Upload',

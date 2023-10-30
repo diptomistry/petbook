@@ -50,36 +50,8 @@ class _AddPostState extends State<AddPost> {
                   child: CircularProgressIndicator(),
                 ));
               }
-              FirebaseFirestore firestore = FirebaseFirestore.instance;
-              CollectionReference posts = firestore.collection('posts');
-              User? user = FirebaseAuth.instance.currentUser;
-
-              if (user != null) {
-                String uid = user.uid;
-
-                await posts.add({
-                  'image': imageUrl,
-                  'userID': uid, // Set the UID explicitly
-                  'text': postEdit.text,
-                  'time': DateTime.now(),
-                }).then((_) {
-                  setState(() {
-                    isUploading = false; // Hide the progress indicator.
-                  });
-                  Get.to(HomeNavigationBar(nav_Index: 0));
-                  print(" posted");
-                }).catchError((error) {
-                  setState(() {
-                    Get.back();
-                    isUploading = false; // Hide the progress indicator.
-                  });
-                  print("Failed to add post: $error");
-                });
-              } else {
-                Get.back();
-                print(
-                    "User is not signed in."); // Handle the case where the user is not signed in
-              }
+              final postsController = Get.find<PostsController>();
+              postsController.postNewPost(imageUrl, postEdit.text);
 
               // Navigator.pop(context);
             },

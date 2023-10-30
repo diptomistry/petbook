@@ -48,6 +48,8 @@ dependencies:
   country_picker: ^2.0.20
 
   flutter_riverpod: ^2.1.1
+  ionicons:
+  redacted:
 
   photo_manager: ^2.5.0
   flutter_contacts: ^1.1.7+1

@@ -51,8 +51,8 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
       ),
       body: pages[nav_Index],
       bottomNavigationBar: CurvedNavigationBar(
-        color: Color(0xFFA1887F),
-        backgroundColor: Color(0xFFFFF9C4),
+        color: Theme.of(context).hintColor,
+        backgroundColor: Colors.transparent,
         items: <Widget>[
           Icon(
             Icons.home,

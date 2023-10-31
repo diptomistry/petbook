@@ -413,7 +413,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
               )
                   : Text(
-                _userData?['petName']??'',
+                '${_userData?['petName']} (${_userData?['species']})' ?? '',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

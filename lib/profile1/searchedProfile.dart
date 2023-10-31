@@ -60,7 +60,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 40), // Adjust the left padding as needed
                     child: Text(
-                      userData['petName'] ?? '',
+                      '${userData['petName']} (${userData['species']})' ?? '',
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,

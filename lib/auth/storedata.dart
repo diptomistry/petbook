@@ -1,5 +1,6 @@
 import 'dart:async';
 
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,8 @@ class createAcc extends StatefulWidget {
 }
 
 class _createAccState extends State<createAcc> {
-
+  bool isEmailverified=false;
+  Timer? timer;
   String verificationCode = '';
   final _formKey = GlobalKey<FormState>();
   TextEditingController _petNameController = TextEditingController();
@@ -25,8 +27,41 @@ class _createAccState extends State<createAcc> {
 
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
-  TextEditingController _speciesController=TextEditingController();
+  @override
+  void initState(){
+    super.initState();
+    // isEmailverified=FirebaseAuth.instance.currentUser!.emailVerified;
+    if(!isEmailverified) {
+      timer = Timer.periodic(
+        Duration(seconds: 3),
+            (_) => checkEmail(),
+      );
+    }
 
+  }
+  Future checkEmail() async {
+    //print(3);
+    registration();
+    await FirebaseAuth.instance.currentUser!.reload();
+    setState(() {
+      isEmailverified=FirebaseAuth.instance.currentUser!.emailVerified;
+    });
+    if(isEmailverified) {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) =>
+              EmailVerificationPage(isEmailVerified: false),
+        ),
+      );
+      timer?.cancel();
+      print("lsdjfl");
+      //storeNow();
+
+
+      //Navigator.pushNamed(context, 'profile');
+    }
+  }
   @override
   void dispose() {
     _petNameController.dispose();
@@ -38,136 +73,56 @@ class _createAccState extends State<createAcc> {
     _petAgeController.dispose();
     _petWeightController.dispose();
     _ownerNameController.dispose();
-    _speciesController.dispose();
+    timer?.cancel();
     super.dispose();
   }
 
   var email, password;
   late bool registrationFailed;
-  Timer? timer;
-  bool isEmailverified=false;
+
 
   // Function to store user data in Firestore
+  Future<void> storeUserData(User user) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  @override
-  void initState(){
-    super.initState();
-
-
-    User? user = FirebaseAuth.instance.currentUser;
-
-
-    if (user == null)
-      isEmailverified=false;
-    else
-      isEmailverified=FirebaseAuth.instance.currentUser!.emailVerified;
-    print(isEmailverified);
-
-    if (user != null) {
-      // There is a signed-in user
-      print('User ID: ${user.uid}');
-      print('User Email: ${user.email}');
-      // You can access other user properties using 'user'
-    } else {
-      // No user is signed in
-      print('No user is signed in.');
-    }
-    if(!isEmailverified) {
-      timer = Timer.periodic(
-        Duration(seconds: 3),
-            (_) => checkEmail() ,
-      );
-    }
-
-
-  }
-  Future checkEmail() async {
-    print(3);
-
-    await FirebaseAuth.instance.currentUser!.reload();
-    setState(() {
-      isEmailverified=FirebaseAuth.instance.currentUser!.emailVerified;
+    await users.doc(user.uid).set({
+      'petName': _petNameController.text,
+      'petGender': _petGenderController.text,
+      'petAge': _petAgeController.text,
+      'petWeight': _petWeightController.text,
+      'ownerName': _ownerNameController.text,
+      'email': _emailController.text,
+      'ownersFb': _ownersFbController.text,
+      'uid': user.uid,
+      'imageLink':'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg',
+      'imageLink2':'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg',
+      'location':'N/A',
+      'forAdoption':'no'
+      // Add more fields as needed
     });
-    if(isEmailverified) {
-      print("lsdjfl");
-      timer?.cancel();
-      storeNow();
-
-
-      //storeNow();
-
-
-      //Navigator.pushNamed(context, 'profile');
-    }
-  }
-  Future<void> storeNow() async{
-   print("hello:$isEmailverified");
-
-    final user=FirebaseAuth.instance.currentUser;
-
-
-   CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-   await users.doc(user?.uid).set({
-     'petName': _petNameController.text,
-     'petGender': _petGenderController.text,
-     'petAge': _petAgeController.text,
-     'petWeight': _petWeightController.text,
-     'ownerName': _ownerNameController.text,
-     'email': _emailController.text,
-     'ownersFb': _ownersFbController.text,
-     'uid': user?.uid,
-     'imageLink':'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg',
-     'imageLink2':'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg',
-     'location':'N/A',
-     'forAdoption':'no',
-     'loveCount':0,
-      'species':''
-     // Add more fields as needed
-   });
-   //Navigator.pushNamed(context, 'profile');
-   Navigator.push(
-     context,
-     CupertinoPageRoute(
-       builder: (context) => HomeNavigationBar(
-         nav_Index: 0,
-       ),
-     ),
-   );
   }
 
 
   Future<void> registration() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     try {
-      final User? user = (await firebaseAuth.createUserWithEmailAndPassword(
+      final UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
-      ))
-          .user;
+      );
+      final User user = userCredential.user!;
 
-      if (user != null && !registrationFailed) {
-        // Store user data in Firestore
-
-
+      if (!isEmailverified && user != null && !registrationFailed) {
         // Send email verification
         await user.sendEmailVerification();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Email verification link sent to $email. Please check your email.'),
-            backgroundColor: Colors.yellow,
-          ),
-        );
 
+        // You can navigate to an email verification page here if needed.
 
+        // You may also show a message to the user indicating that they need to verify their email.
 
-        //FirebaseAuth.instance.currentUser?.emailVerified;
-
-        // Navigate to email verification page
       }
     } catch (e) {
       print('Registration failed: $e');
-      // registrationFailed=true;
       String errorMessage = extractErrorMessage(e.toString());
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -176,6 +131,19 @@ class _createAccState extends State<createAcc> {
         ),
       );
     }
+  }
+
+  Future<void> storeNow() async {
+
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    final User? user = (await firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    ))
+        .user;
+    await storeUserData(user!);
+
   }
 
 
@@ -243,16 +211,6 @@ class _createAccState extends State<createAcc> {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter your pet\'s name';
-                              }
-                              return null;
-                            },
-                          ),
-                          roundedTextField(
-                            controller: _speciesController,
-                            hintText: 'Species',
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your pet\'s Species(like cat,dog or others)';
                               }
                               return null;
                             },
@@ -340,18 +298,13 @@ class _createAccState extends State<createAcc> {
                               return null;
                             },
                           ),
-
+                          //SizedBox(height: 2.0),
                           Row(
                             children: [
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                     // String email = _emailController.text;
-                                     // String password = _passwordController.text;
-
-                                      // Call the registration method with email and password
-                                    //  registration(email, password);
                                       registration();
                                       // Perform registration logic
                                       if (password.length >= 6)
@@ -382,7 +335,6 @@ class _createAccState extends State<createAcc> {
                               ),
                             ],
                           ),
-
                         ],
                       ),
                     ],
@@ -403,8 +355,7 @@ class _createAccState extends State<createAcc> {
     FormFieldValidator<String>? validator,
   }) {
     return Container(
-
-      margin: EdgeInsets.only(bottom: 13.0),
+      margin: EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
@@ -435,3 +386,63 @@ class _createAccState extends State<createAcc> {
   }
 }
 
+class EmailVerificationPage extends StatelessWidget {
+  final bool isEmailVerified;
+
+  EmailVerificationPage({required this.isEmailVerified});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              _isDarkTheme(context)
+                  ? 'assets/resetBgDark.png'
+                  : 'assets/resetBg.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Petbook'),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Email Verification',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'A verification email has been sent to your email address. Please check your inbox and follow the instructions to verify your email.',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    // Call the registrationCallback function when the button is pressed
+                    //FirebaseAuth.instance.currentUser?.reload();
+                    final user=FirebaseAuth.instance.currentUser;
+                    if(user!.emailVerified){
+
+                      Navigator.pushNamed(context, 'profile');
+                    }
+
+                  },
+                  child: Text('Go to Login'),
+                ),
+              ],
+            ),
+          ),
+        )
+    );
+  }
+
+  bool _isDarkTheme(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
+  }
+}

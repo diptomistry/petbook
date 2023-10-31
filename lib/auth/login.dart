@@ -652,6 +652,7 @@ class _MyLoginState extends State<MyLogin> {
                                 //The Expanded widget ensures that any remaining available space in the row is allocated to the Row widget that contains the "Forgot Password" text.
                                 child: TextButton(
                                   onPressed: () {
+                                    FirebaseAuth.instance.signOut();
                                     Navigator.pushNamed(context, 'register');
                                   },
                                   child: Text(

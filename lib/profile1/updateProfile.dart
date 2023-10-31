@@ -503,7 +503,7 @@ class _updateProfilePageState extends State<updateProfilePage> {
                       ),
                       onPressed: () {
                         int currentLoveCount = _userData?['loveCount'] ?? 0;
-                        int newLoveCount = currentLoveCount + 1;
+                        int newLoveCount = isLoved ? currentLoveCount - 1 : currentLoveCount + 1;
                         // _userData?['loveCount'] = newLoveCount;
                         // Now, you can update the loveCount in Firestore
                         _updateLoveCount(newLoveCount);

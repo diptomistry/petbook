@@ -196,8 +196,19 @@ class PostsController extends GetxController {
         .where('postID', isEqualTo: postID)
         .where('userID', isEqualTo: userID)
         .get();
+    if (query.docs.isNotEmpty) {
+      // Document already exists, so we check the reaction count.
+      final docId = query.docs[0].id;
+      final reactCount = await getTotalReactCountForPost(postID);
 
-    return query.docs.isNotEmpty;
+      if (reactCount.value > 0) {
+        // Reaction count is greater than 0, meaning the user has reacted to the post.
+        return true;
+      }
+      // Reaction count is 0, so the user hasn't reacted to the post.
+      return false;
+    }
+    return false;
   }
 
   Future<bool> iLike(String postID, String userID) async {

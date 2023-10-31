@@ -35,7 +35,6 @@ class PostsController extends GetxController {
         text: commentText,
         timestamp: DateTime.now(),
         postID: postIndex);
-
     // Call a function to save the comment to Firestore here
     saveCommentToFirestore(postIndex, comment);
   }
@@ -88,12 +87,15 @@ class PostsController extends GetxController {
 
   Future<Map<String, dynamic>> getCommentsAndUsersForPost(String postID) async {
     final comments = await getCommentsForPost(postID);
-    final user = await fetchUserWithID(
-        posts.firstWhere((post) => post.id == postID).userID);
+    final commnetUsers = [];
+    for (var cmnt in comments) {
+      final user = await fetchUserWithID(cmnt.userID);
+      commnetUsers.add(user);
+    }
 
     return {
       'comments': comments,
-      'user': user,
+      'users': commnetUsers,
     };
   }
 
@@ -487,9 +489,7 @@ class _HomePageState extends State<HomePage> {
                                                           'https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445',
                                                       fit: BoxFit.cover,
                                                     ),
-                                                  ).redacted(
-                                                      context: context,
-                                                      redact: true),
+                                                  ),
                                                 ),
                                                 title: Text(
                                                   _user?.petName ?? 'Unknown',
@@ -652,18 +652,21 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                   isCommenting.value
                                                       ? Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
                                                           children: [
                                                             Divider(
                                                               thickness: 1.2,
                                                             ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      left:
-                                                                          10.0,
-                                                                      top: 10),
-                                                              child: Expanded(
+                                                            Flexible(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            10.0,
+                                                                        top:
+                                                                            10),
                                                                 child:
                                                                     Container(
                                                                   margin: EdgeInsets
@@ -743,22 +746,11 @@ class _HomePageState extends State<HomePage> {
                                                               ),
                                                               GestureDetector(
                                                                 onTap: () {
-                                                                  // Navigate to a new screen to view all comments
-                                                                  // Navigator.of(context).push(
-                                                                  //   MaterialPageRoute(
-                                                                  //     builder: (context) => AllCommentsScreen(post.id),
-                                                                  //   ),
-                                                                  // );
+                                                                  viewAll
+                                                                      .toggle();
                                                                 },
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap: () {
-                                                                    viewAll
-                                                                        .toggle();
-                                                                  },
-                                                                  child: Text(
-                                                                      'View all comments'),
-                                                                ),
+                                                                child: Text(
+                                                                    'View all comments'),
                                                               ),
                                                             ],
                                                           ),
@@ -808,6 +800,11 @@ class _HomePageState extends State<HomePage> {
                                                                 final comment =
                                                                     comments[
                                                                         index];
+                                                                PetUser?
+                                                                    whoCmnt =
+                                                                    snapshot.data![
+                                                                            'users']
+                                                                        [index];
                                                                 return Container(
                                                                   padding: EdgeInsets
                                                                       .symmetric(
@@ -843,15 +840,15 @@ class _HomePageState extends State<HomePage> {
                                                                             50,
                                                                         child: Image
                                                                             .network(
-                                                                          _user?.petPhoto ??
-                                                                              '',
+                                                                          whoCmnt?.petPhoto ??
+                                                                              'https://t4.ftcdn.net/jpg/01/99/00/79/360_F_199007925_NolyRdRrdYqUAGdVZV38P4WX8pYfBaRP.jpg',
                                                                           fit: BoxFit
                                                                               .cover,
                                                                         ),
                                                                       ),
                                                                     ),
                                                                     title: Text(
-                                                                        user?.petName ??
+                                                                        whoCmnt?.petName ??
                                                                             'Unknown',
                                                                         style:
                                                                             TextStyle(

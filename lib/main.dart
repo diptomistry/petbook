@@ -118,6 +118,7 @@ import 'package:petbook/firebase_options.dart';
 import 'package:petbook/profile1/UserProfilePage.dart';
 import 'package:petbook/profile1/profile.dart';
 import 'package:petbook/profile1/utils.dart';
+import 'package:petbook/waiting_page.dart';
 import 'NavBar/HomeNavBar.dart';
 import 'auth/homepage.dart';
 import 'auth/login.dart';
@@ -136,7 +137,6 @@ void main() async {
   );
 }
 
-
 class PetbookApp extends StatefulWidget {
   @override
   _PetbookAppState createState() => _PetbookAppState();
@@ -150,6 +150,7 @@ class _PetbookAppState extends State<PetbookApp> {
       _themeMode = mode;
     });
   }
+
   ///
 
   ///
@@ -197,9 +198,7 @@ class _PetbookAppState extends State<PetbookApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(
-        setThemeMode: (ThemeMode) {},
-      ),
+      home: IntroPage(),
       //     HomePage(setThemeMode: _setThemeMode), // Pass _themeMode to MyLogin
       routes: {
         'homepage': (context) => HomePage(setThemeMode: _setThemeMode),
@@ -226,6 +225,3 @@ class _PetbookAppState extends State<PetbookApp> {
     );
   }
 }
-
-
-

@@ -97,10 +97,7 @@ class ContactPage extends ConsumerWidget {
                     ),
                   ContactCard(
                     onTap: () {
-                      // Create an instance of ChatPage
-                      ChatPage chatPage = ChatPage(user: firebaseContact); // Pass data as needed
-
-                      // Push the ChatPage onto the navigator stack
+                      ChatPage chatPage = ChatPage(user: firebaseContact);
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => chatPage),

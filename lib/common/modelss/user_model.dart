@@ -21,7 +21,7 @@ class UserModel {
     return {
       'petName': username,
       'uid': uid,
-      'profileImageUrl': profileImageUrl,
+      'imageLink': profileImageUrl,
       'active': active,
       'lastSeen': lastSeen,
       'phoneNumber': phoneNumber,
@@ -30,11 +30,10 @@ class UserModel {
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
-    print(map);
     return UserModel(
       username: map['petName'] ?? '',
       uid: map['uid'] ?? '',
-      profileImageUrl: map['imageLink2'] ?? '',
+      profileImageUrl: map['imageLink'] ?? '',
       active: map['active'] ?? false,
       lastSeen: map['lastSeen'] ?? 0,
       phoneNumber: map['phoneNumber'] ?? '',

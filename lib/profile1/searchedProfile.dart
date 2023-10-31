@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../feature/chat/pages/chat_page.dart';
+
 class ProfileSearch extends StatefulWidget {
   final DocumentSnapshot userData;
 
@@ -60,7 +62,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 40), // Adjust the left padding as needed
                     child: Text(
-                      userData['petName'] ?? '',
+                      '${userData['petName']} (${userData['species']})' ?? '',
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -71,8 +73,11 @@ class _ProfileSearchState extends State<ProfileSearch> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Add your onPressed action here
-                    // For example, you can launch a messenger app or perform some other action.
+                    // ChatPage chatPage = ChatPage(user: firebaseContact);
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => chatPage),
+                    // );
                   },
                   child: SvgPicture.asset(
                     'assets/messenger.svg', // Provide the path to your SVG file
@@ -241,7 +246,10 @@ class _ProfileSearchState extends State<ProfileSearch> {
                       },
                       icon: Icon(Icons.pets),
                       label: Text(
-                        'Adopt Me',
+                        userData['forAdoption'] == 'yes'
+                            ? 'Contact with ${userData['ownerName']} to Adopt Me'
+                            : 'Not for Adoption',
+                        //userData['species'],
                         style: TextStyle(
                           fontSize: 16,
                           color: Theme.of(context).colorScheme.secondary,

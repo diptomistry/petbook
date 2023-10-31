@@ -1,10 +1,13 @@
 import 'package:petbook/common/extension/custon_theme_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:petbook/common/modelss/user_model.dart';
 
 class YellowCard extends StatelessWidget {
   const YellowCard({
     Key? key,
   }) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +18,17 @@ class YellowCard extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: Colors.blueGrey,
         borderRadius: BorderRadius.circular(10),
       ),
-      /*child: Text(
-        '/*Message and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them. Tap to learn more.*/ ',
+      child: Text(
+        'hey...wanna ask something about pet??',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 13,
-          color: context.theme.yellowCardTextColor,
+          color: Colors.white,
         ),
-      ),*/
+      ),
     );
   }
 }

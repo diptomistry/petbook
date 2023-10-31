@@ -229,19 +229,19 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
                       children: [
                         RotatedBox(
                           quarterTurns: 45,
-                          child: CustomIconButton(
+                          /*child: CustomIconButton(
                             onPressed: () => setState(
                                   () => cardHeight == 0 ? cardHeight = 220 : cardHeight = 0,
                             ),
                             icon: cardHeight == 0 ? Icons.attach_file : Icons.close,
                             iconColor: Theme.of(context).listTileTheme.iconColor,
-                          ),
+                          ),*/
                         ),
-                        CustomIconButton(
+                        /*CustomIconButton(
                           onPressed: () {},
                           icon: Icons.camera_alt_outlined,
                           iconColor: Theme.of(context).listTileTheme.iconColor,
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
@@ -250,7 +250,7 @@ class _ChatTextFieldState extends ConsumerState<ChatTextField> {
               const SizedBox(width: 5),
               CustomIconButton(
                 onPressed: sendTextMessage,
-                icon: isMessageIconEnabled ? Icons.send_outlined : Icons.mic_none_outlined,
+                icon: isMessageIconEnabled ? Icons.send_outlined : Icons.send_outlined,
                 background: Coloors.greenDark,
                 iconColor: Colors.white,
               ),

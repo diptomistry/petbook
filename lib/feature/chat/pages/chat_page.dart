@@ -31,8 +31,9 @@ class ChatPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -101,7 +102,7 @@ class ChatPage extends ConsumerWidget {
           ),
         ),
         actions: [
-          CustomIconButton(
+          /*CustomIconButton(
             onPressed: () {},
             icon: Icons.video_call,
             iconColor: Colors.white,
@@ -110,12 +111,12 @@ class ChatPage extends ConsumerWidget {
             onPressed: () {},
             icon: Icons.call,
             iconColor: Colors.white,
-          ),
-          /*CustomIconButton(
+          ),*/
+          CustomIconButton(
             onPressed: () {},
             icon: Icons.more_vert,
             iconColor: Colors.white,
-          ),*/
+          ),
         ],
       ),
       body: Stack(
@@ -126,7 +127,7 @@ class ChatPage extends ConsumerWidget {
             width: double.maxFinite,
             image: const AssetImage('assets/doodle_bg.png'),
             fit: BoxFit.cover,
-            color: Colors.blue,
+            color: Colors.white,
           ),
           // Stream of Chat
           Padding(
@@ -156,11 +157,11 @@ class ChatPage extends ConsumerWidget {
                           ),
                           child: Shimmer.fromColors(
                             baseColor: random.isEven
-                                ? Colors.pink!.withOpacity(.3)
-                                : Colors.pink!.withOpacity(.2),
+                                ? Colors.white!.withOpacity(.3)
+                                : Colors.white!.withOpacity(.2),
                             highlightColor: random.isEven
-                                ? Colors.yellow!.withOpacity(.4)
-                                : Colors.yellow!.withOpacity(.3),
+                                ? Colors.white!.withOpacity(.4)
+                                : Colors.white!.withOpacity(.3),
                             child: Container(
                               height: 40,
                               width: 170 +
@@ -202,7 +203,7 @@ class ChatPage extends ConsumerWidget {
 
                       return Column(
                         children: [
-                          //if (index == 0) const YellowCard(),
+                          if (index == 0) const YellowCard(),
                           if (isShowDateCard) ShowDateCard(date: message.timeSent),
                           MessageCard(
                             isSender: isSender,

@@ -21,8 +21,7 @@ class ChatHomePage extends ConsumerWidget {
       body: StreamBuilder<List<LastMessageModel>>(
         stream: ref.watch(chatControllerProvider).getAllLastMessageList(),
         builder: (_, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              !snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
                 color: Coloors.greenDark,
@@ -39,35 +38,35 @@ class ChatHomePage extends ConsumerWidget {
               return ListTile(
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ChatPage(
-                                user: UserModel(
-                                  username: lastMessageData.username,
-                                  uid: lastMessageData.contactId,
-                                  profileImageUrl:
-                                      lastMessageData.profileImageUrl,
-                                  active: true,
-                                  lastSeen: 0,
-                                  phoneNumber: '0',
-                                  groupId: [],
-                                ),
-                              )));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(user: UserModel(
+                        username: lastMessageData.username,
+                        uid: lastMessageData.contactId,
+                        profileImageUrl: lastMessageData.profileImageUrl,
+                        active: true,
+                        lastSeen: 0,
+                        phoneNumber: '0',
+                        groupId: [],
+                      ),
+                      ))
+                  );
                 },
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      lastMessageData.username,
-                      style: TextStyle(fontSize: 13, color: Colors.black
-                          //color: context.theme.greyColor,
-                          ),
+                    Text(lastMessageData.username,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.orangeAccent,
+                      ),
                     ),
                     Text(
                       DateFormat.Hm().format(lastMessageData.timeSent),
-                      style: TextStyle(fontSize: 13, color: Colors.black
-                          //color: context.theme.greyColor,
-                          ),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.blue,
+                      ),
                     ),
                   ],
                 ),
@@ -77,7 +76,7 @@ class ChatHomePage extends ConsumerWidget {
                     lastMessageData.lastMessage,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    //style: TextStyle(color: context.theme.greyColor),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
                 leading: CircleAvatar(
@@ -95,8 +94,7 @@ class ChatHomePage extends ConsumerWidget {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-                  ContactPage(), // Replace with the actual ContactPage widget.
+              builder: (context) => ContactPage(), // Replace with the actual ContactPage widget.
             ),
           );
         },

@@ -198,7 +198,9 @@ class _PetbookAppState extends State<PetbookApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: IntroPage(),
+      home: HomePage(
+        setThemeMode: (ThemeMode) {},
+      ),
       //     HomePage(setThemeMode: _setThemeMode), // Pass _themeMode to MyLogin
       routes: {
         'homepage': (context) => HomePage(setThemeMode: _setThemeMode),

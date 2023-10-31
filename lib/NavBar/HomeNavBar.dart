@@ -10,6 +10,7 @@ import 'package:petbook/feature/welcome/pages/welcome_page.dart';
 import 'package:petbook/message/userlist.dart';
 
 import '../feature/home/pages/chat_home_page.dart';
+import '../health/health_tips.dart';
 import '../profile1/UserProfilePage.dart';
 import '../profile1/profileSearch.dart';
 
@@ -35,7 +36,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
   var pages = [
     HomePage(),
     ProfileSearchPage(),
-    HomePage(),
+    HealthTipsPage(),
     Homepage(),
     UserProfilePage()
   ];

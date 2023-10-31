@@ -59,11 +59,6 @@ class ChatPage extends ConsumerWidget {
         ),
         title: InkWell(
           onTap: () {
-            Navigator.pushNamed(
-              context,
-              Routes.profile,
-              arguments: user,
-            );
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),

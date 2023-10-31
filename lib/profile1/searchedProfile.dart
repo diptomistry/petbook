@@ -117,7 +117,17 @@ class _ProfileSearchState extends State<ProfileSearch> {
                         size: 40, // Increase the icon size
                         color: isLoved ? Theme.of(context).hintColor : Colors.black, // Change the icon color when loved
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        int currentLoveCount = userData?['loveCount'] ?? 0;
+                        int newLoveCount = currentLoveCount + 1;
+                        final userRef = FirebaseFirestore.instance.collection('users').doc(widget.userData.id); // Assuming 'users' is your collection name
+
+                        await userRef.update({
+                          'loveCount': newLoveCount,
+                        });
+                        // _userData?['loveCount'] = newLoveCount;
+                        // Now, you can update the loveCount in Firestore
+                       // _updateLoveCount(newLoveCount);
                         // Toggle the "love" state when the button is clicked
                         setState(() {
                           isLoved = !isLoved;
@@ -134,6 +144,21 @@ class _ProfileSearchState extends State<ProfileSearch> {
                   ),
                 ),
                 Text('      '),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 243), // Adjust the left padding as needed
+                  child: Text(
+                    ' ${userData?['loveCount'].toString()}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                ),
               ],
             ),
 
@@ -158,7 +183,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
                 ),
               ],
             ),
-            SizedBox(height: 46),
+            SizedBox(height: 26),
             Padding(
               padding: EdgeInsets.only(left: 10),
               child: Row(

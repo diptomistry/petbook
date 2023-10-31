@@ -47,7 +47,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         elevation: 0,
         toolbarHeight: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Color(0xFFA1887F),
+          statusBarColor: Theme.of(context).hintColor,
         ),
       ),
       body: pages[nav_Index],

@@ -42,7 +42,7 @@ class HealthTipCard extends StatelessWidget {
             title: title, content: content, imagePath: imagePath, id: tip.id));
       },
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.2,
+        height: MediaQuery.of(context).size.height * 0.28,
         child: Card(
           elevation: 2,
           shape:
@@ -54,6 +54,7 @@ class HealthTipCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
+                  flex: 4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -66,25 +67,46 @@ class HealthTipCard extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       RichText(
-                          maxLines: 3,
+                          maxLines: 5,
                           text: TextSpan(
                             text: content,
                             style: TextStyle(
                                 fontSize: 16,
                                 overflow: TextOverflow.ellipsis,
                                 color: Colors.black),
-                          ))
+                          )),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.favorite,
+                            color: Color(0xFF00a19d),
+                          ),
+                          Text(
+                            ' ${tip.likes.length} people loves',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17,
+                                color: Colors.black),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
                 SizedBox(width: 10),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    imagePath,
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: MediaQuery.of(context).size.height * 0.38,
-                    fit: BoxFit.cover, // Adjust the width as needed
+                Expanded(
+                  flex: 4,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      imagePath,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      fit: BoxFit.fill, // Adjust the width as needed
+                    ),
                   ),
                 ), // Add spacing between text and image
               ],

@@ -1,21 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:petbook/health/health_tips_details.dart';
+
+class HealthTip {
+  final String id; // Document ID
+  final String title;
+  final String content;
+  final String image;
+  final List<String> likes; // List of user IDs who liked the tip
+  int totalLikes; // Total count of likes
+
+  HealthTip({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.image,
+    required this.likes,
+    this.totalLikes = 0,
+  });
+}
 
 class HealthTipCard extends StatelessWidget {
   final String title;
   final String content;
-  final String imagePath; // Path to your image asset
+  final String imagePath;
+  final HealthTip tip; // Path to your image asset
 
-  HealthTipCard({
-    required this.title,
-    required this.content,
-    required this.imagePath,
-  });
+  HealthTipCard(
+      {required this.title,
+      required this.content,
+      required this.imagePath,
+      required this.tip});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Get.to(HealthTipDetailsPage(
+            title: title, content: content, imagePath: imagePath, id: tip.id));
+      },
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.2,
         child: Card(
@@ -72,6 +97,28 @@ class HealthTipCard extends StatelessWidget {
 }
 
 class HealthTipsPage extends StatelessWidget {
+  Future<List<HealthTip>> fetchHealthTips() async {
+    final QuerySnapshot tipSnapshot =
+        await FirebaseFirestore.instance.collection('tips').get();
+    final List<HealthTip> tips = [];
+
+    for (QueryDocumentSnapshot tipDocument in tipSnapshot.docs) {
+      final List<dynamic> likes = tipDocument['likes'];
+      final int totalLikes = likes.length;
+
+      tips.add(HealthTip(
+        id: tipDocument.id,
+        title: tipDocument['title'],
+        content: tipDocument['content'],
+        image: tipDocument['image'],
+        likes: likes.cast<String>(),
+        totalLikes: totalLikes,
+      ));
+    }
+
+    return tips;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,22 +132,32 @@ class HealthTipsPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HealthTipCard(
-                title: '1. Regular Exams are Vital',
-                content:
-                    'Just like you, your pet can get heart problems, develop arthritis, or have a toothache. The best way to prevent such problems or catch them early is to see your veterinarian every year. Regular exams are the single most important way to keep pets healthy. Annual vet visits should touch on nutrition and weight control, as well as cover recommended vaccinations, parasite control, dental exam, and health screenings.',
-                imagePath:
-                    'https://d2zp5xs5cp8zlg.cloudfront.net/image-44386-800.jpg',
-              ),
-              HealthTipCard(
-                title: '2. Spay and Neuter Your Pets',
-                content:
-                    'Eight million to 10 million pets end up in U.S. shelters every year. Some are lost, some have been abandoned, and some are homeless. Here’s an easy way to avoid adding to that number — spay and neuter your cats and dogs. It’s a procedure that can be performed as early as six to eight weeks of age. Spaying and neutering doesn’t just cut down on the number of unwanted pets; it has other substantial benefits for your pet. Studies show it also lowers the risk of certain cancers and reduces a pet’s risk of getting lost by decreasing the tendency to roam.',
-                imagePath:
-                    'https://vetncare.com/wp-content/uploads/2014/02/esterilizacion-temprana_4_1483679.jpg',
-              ),
+              FutureBuilder(
+                  future: fetchHealthTips(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    var tips = snapshot.data;
+
+                    return Flexible(
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: tips?.length,
+                          itemBuilder: (context, index) {
+                            var tip = tips![index];
+                            return HealthTipCard(
+                                title: '${tip.title}',
+                                content: tip.content,
+                                imagePath: tip.image,
+                                tip: tip);
+                          }),
+                    );
+                  })
             ],
           ),
         ),

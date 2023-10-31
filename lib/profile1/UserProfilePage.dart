@@ -78,6 +78,28 @@ class _UserProfilePageState extends State<UserProfilePage> {
     print("Initiating user data fetch...");
     _fetchUserData();
   }
+  Future<void> _updateLoveCount(int newLoveCount) async {
+    // Get the document reference of the user's profile in Firestore
+    try {
+      String? userEmail = _user.email;
+      if (userEmail != null) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: userEmail)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentReference docRef = querySnapshot.docs.first.reference;
+          await docRef.update({
+            'loveCount': newLoveCount,
+          });
+          _fetchUserData();
+        }
+      }
+    } catch (err) {
+      print(err.toString());
+    }
+  }
 
   Future<void> _fetchUserData() async {
     if (_user == null) {
@@ -122,6 +144,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           await docRef.update({
             'location': location,
           });
+
         }
       }
     } catch (err) {
@@ -478,6 +501,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         color: isLoved ? Theme.of(context).hintColor : Colors.black, // Change the icon color when loved
                       ),
                       onPressed: () {
+                        int currentLoveCount = _userData?['loveCount'] ?? 0;
+                        int newLoveCount = currentLoveCount + 1;
+                       // _userData?['loveCount'] = newLoveCount;
+                        // Now, you can update the loveCount in Firestore
+                        _updateLoveCount(newLoveCount);
                         // Toggle the "love" state when the button is clicked
                         setState(() {
                           isLoved = !isLoved;
@@ -495,9 +523,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ],
               ),
             ),
+            if(!_isEditing)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 280), // Adjust the left padding as needed
+                    child: Text(
+                      ' ${_userData?['loveCount'].toString()}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
 
 
-            SizedBox(height: 16),
+            //SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -539,7 +583,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             //if(_isEditing)
             if(!_isEditing)
-              SizedBox(height: 46),
+              SizedBox(height: 26),
             if (!_isEditing)
               Padding(
                 padding: EdgeInsets.only(left: 10),

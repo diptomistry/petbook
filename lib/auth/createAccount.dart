@@ -82,6 +82,8 @@ class _createAccState extends State<createAcc> {
 
   }
   Future checkEmail() async {
+
+    //timer?.cancel();
     print(3);
 
     await FirebaseAuth.instance.currentUser!.reload();
@@ -99,6 +101,7 @@ class _createAccState extends State<createAcc> {
 
       //Navigator.pushNamed(context, 'profile');
     }
+
   }
   Future<void> storeNow() async{
    print("hello:$isEmailverified");
@@ -117,14 +120,15 @@ class _createAccState extends State<createAcc> {
      'email': _emailController.text,
      'ownersFb': _ownersFbController.text,
      'uid': user?.uid,
-     'imageLink':'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg',
-     'imageLink2':'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg',
+     'imageLink':'https://cdn.wallpapersafari.com/51/50/mPlCtx.jpg',
+     'imageLink2':'https://media.istockphoto.com/id/1390616702/vector/senior-man-avatar-smiling-elderly-man-with-beard-with-gray-hair-3d-vector-people-character.jpg?s=612x612&w=0&k=20&c=CwU892ELqQlY65Xrnmo2N-pb9AE4xEXcp5gAJ6WpKJg=',
      'location':'N/A',
      'forAdoption':'no',
      'loveCount':0,
-      'species':''
+      'species':_speciesController.text
      // Add more fields as needed
    });
+
    //Navigator.pushNamed(context, 'profile');
    Navigator.push(
      context,

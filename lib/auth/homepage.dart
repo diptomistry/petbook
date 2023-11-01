@@ -72,6 +72,9 @@ class HomePage extends StatelessWidget {
 }
 */
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:petbook/waiting_page.dart';
 
 class HomePage extends StatelessWidget {
   final Function(ThemeMode) setThemeMode;
@@ -166,6 +169,18 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.to(IntroPage()); // Set dark theme
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF00a19d),
+              ),
+              child: Text('About Us'),
+            )
           ],
         ),
       ),

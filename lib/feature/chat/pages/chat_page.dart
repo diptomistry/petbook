@@ -1,24 +1,20 @@
 import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:petbook/common/extension/custon_theme_extension.dart';
-import 'package:petbook/common/modelss/user_model.dart';
-import 'package:petbook/common/routes/routes.dart';
-import 'package:petbook/common/widgets/custom_icon_button.dart';
-import 'package:petbook/feature/auth/controller/auth_controller.dart';
-import 'package:petbook/feature/chat/controller/chat_controller.dart';
-import 'package:petbook/feature/chat/widgets/chat_text_field.dart';
-import 'package:petbook/feature/chat/widgets/message_card.dart';
-import 'package:petbook/feature/chat/widgets/show_date_card.dart';
-import 'package:petbook/feature/chat/widgets/yellow_card.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petbook/common/helper/last_seen_message.dart';
+import 'package:petbook/common/modelss/user_model.dart';
+import 'package:petbook/common/widgets/custom_icon_button.dart';
+import 'package:petbook/feature/auth/controller/auth_controller.dart';
+import 'package:petbook/feature/chat/controller/chat_controller.dart';
+import 'package:petbook/feature/chat/notificationmanager.dart';
+import 'package:petbook/feature/chat/widgets/chat_text_field.dart';
+import 'package:petbook/feature/chat/widgets/message_card.dart';
+import 'package:petbook/feature/chat/widgets/show_date_card.dart';
+import 'package:petbook/feature/chat/widgets/yellow_card.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../common/helper/last_seen_message.dart';
-
 
 final pageStorageBucket = PageStorageBucket();
 
@@ -27,13 +23,20 @@ class ChatPage extends ConsumerWidget {
 
   final UserModel user;
   final ScrollController scrollController = ScrollController();
+  bool notificationManagerInitialized = false;
+  final NotificationManager notificationManager = NotificationManager();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (!notificationManagerInitialized) {
+      notificationManager.initialize();
+      notificationManagerInitialized = true;
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF00a19d),
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -58,8 +61,7 @@ class ChatPage extends ConsumerWidget {
           ),
         ),
         title: InkWell(
-          onTap: () {
-          },
+          onTap: () {},
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
             child: Column(
@@ -74,17 +76,22 @@ class ChatPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 3),
                 StreamBuilder(
-                  stream: ref.read(authControllerProvider).getUserPresenceStatus(uid: user.uid),
+                  stream: ref
+                      .read(authControllerProvider)
+                      .getUserPresenceStatus(uid: user.uid),
                   builder: (_, snapshot) {
                     if (snapshot.connectionState != ConnectionState.active) {
                       return const SizedBox();
                     }
 
                     final singleUserModel = snapshot.data!;
-                    final lastMessage = lastSeenMessage(singleUserModel.lastSeen);
+                    final lastMessage =
+                        lastSeenMessage(singleUserModel.lastSeen);
 
                     return Text(
-                      singleUserModel.active ? 'online' : 'last seen ${lastSeenMessage(user.lastSeen)} ago',
+                      singleUserModel.active
+                          ? 'online'
+                          : 'last seen ${lastSeenMessage(user.lastSeen)} ago',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.white,
@@ -128,7 +135,9 @@ class ChatPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 60),
             child: StreamBuilder(
-              stream: ref.watch(chatControllerProvider).getAllOneToOneMessage(user.uid),
+              stream: ref
+                  .watch(chatControllerProvider)
+                  .getAllOneToOneMessage(user.uid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState != ConnectionState.active) {
                   return ListView.builder(
@@ -136,7 +145,9 @@ class ChatPage extends ConsumerWidget {
                     itemBuilder: (_, index) {
                       final random = Random().nextInt(14);
                       return Container(
-                        alignment: random.isEven ? Alignment.centerRight : Alignment.centerLeft,
+                        alignment: random.isEven
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
                         margin: EdgeInsets.only(
                           top: 5,
                           bottom: 5,
@@ -145,7 +156,9 @@ class ChatPage extends ConsumerWidget {
                         ),
                         child: ClipPath(
                           clipper: UpperNipMessageClipperTwo(
-                            random.isEven ? MessageType.send : MessageType.receive,
+                            random.isEven
+                                ? MessageType.send
+                                : MessageType.receive,
                             nipWidth: 8,
                             nipHeight: 10,
                             bubbleRadius: 12,
@@ -163,7 +176,7 @@ class ChatPage extends ConsumerWidget {
                                   double.parse(
                                     (random * 2).toString(),
                                   ),
-                              color: Colors.white,//
+                              color: Colors.white, //
                             ),
                           ),
                         ),
@@ -181,25 +194,35 @@ class ChatPage extends ConsumerWidget {
                     controller: scrollController,
                     itemBuilder: (_, index) {
                       final message = snapshot.data![index];
-                      final isSender = message.senderId == FirebaseAuth.instance.currentUser!.uid;
+                      final isSender = message.senderId ==
+                          FirebaseAuth.instance.currentUser?.uid;
 
                       final haveNip = (index == 0) ||
                           (index == snapshot.data!.length - 1 &&
-                              message.senderId != snapshot.data![index - 1].senderId) ||
-                          (message.senderId != snapshot.data![index - 1].senderId &&
-                              message.senderId == snapshot.data![index + 1].senderId) ||
-                          (message.senderId != snapshot.data![index - 1].senderId &&
-                              message.senderId != snapshot.data![index + 1].senderId);
+                              message.senderId !=
+                                  snapshot.data![index - 1].senderId) ||
+                          (message.senderId !=
+                                  snapshot.data![index - 1].senderId &&
+                              message.senderId ==
+                                  snapshot.data![index + 1].senderId) ||
+                          (message.senderId !=
+                                  snapshot.data![index - 1].senderId &&
+                              message.senderId !=
+                                  snapshot.data![index + 1].senderId);
                       final isShowDateCard = (index == 0) ||
                           ((index == snapshot.data!.length - 1) &&
-                              (message.timeSent.day > snapshot.data![index - 1].timeSent.day)) ||
-                          (message.timeSent.day > snapshot.data![index - 1].timeSent.day &&
-                              message.timeSent.day <= snapshot.data![index + 1].timeSent.day);
+                              (message.timeSent.day >
+                                  snapshot.data![index - 1].timeSent.day)) ||
+                          (message.timeSent.day >
+                                  snapshot.data![index - 1].timeSent.day &&
+                              message.timeSent.day <=
+                                  snapshot.data![index + 1].timeSent.day);
 
                       return Column(
                         children: [
                           if (index == 0) const YellowCard(),
-                          if (isShowDateCard) ShowDateCard(date: message.timeSent),
+                          if (isShowDateCard)
+                            ShowDateCard(date: message.timeSent),
                           MessageCard(
                             isSender: isSender,
                             haveNip: haveNip,

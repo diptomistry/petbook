@@ -28,6 +28,7 @@ class ChatHomePage extends ConsumerWidget {
               ),
             );
           }
+          if (!snapshot.hasData) return Center(child: Text('No chat found'));
           final sortedData = snapshot.data!
             ..sort((a, b) => b.timeSent.compareTo(a.timeSent));
           return ListView.builder(
@@ -38,24 +39,26 @@ class ChatHomePage extends ConsumerWidget {
               return ListTile(
                 onTap: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(user: UserModel(
-                        username: lastMessageData.username,
-                        uid: lastMessageData.contactId,
-                        profileImageUrl: lastMessageData.profileImageUrl,
-                        active: true,
-                        lastSeen: 0,
-                        phoneNumber: '0',
-                        groupId: [],
-                      ),
-                      ))
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                                user: UserModel(
+                                  username: lastMessageData.username,
+                                  uid: lastMessageData.contactId,
+                                  profileImageUrl:
+                                      lastMessageData.profileImageUrl,
+                                  active: true,
+                                  lastSeen: 0,
+                                  phoneNumber: '0',
+                                  groupId: [],
+                                ),
+                              )));
                 },
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(lastMessageData.username,
+                    Text(
+                      lastMessageData.username,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.orangeAccent,
@@ -94,7 +97,8 @@ class ChatHomePage extends ConsumerWidget {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ContactPage(), // Replace with the actual ContactPage widget.
+              builder: (context) =>
+                  ContactPage(), // Replace with the actual ContactPage widget.
             ),
           );
         },

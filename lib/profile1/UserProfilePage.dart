@@ -653,7 +653,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        launch('https://www.facebook.com/${_userData?['ownersFb']??''}');
+                        launch('${_userData?['ownersFb']??''}');
                       },
                       child: Container(
                         height: 50,

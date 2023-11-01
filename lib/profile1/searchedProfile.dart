@@ -171,6 +171,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
                       primary: Theme.of(context).hintColor, // Customize the button color
                     ),
                   ),
+                  SizedBox(width: 6),
                   ElevatedButton.icon(
                     onPressed: () async {
                       final userRef = FirebaseFirestore.instance.collection('users').doc(widget.userData.id);
@@ -195,6 +196,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
                         backgroundColor: isFollowing ?Theme.of(context).hintColor :Colors.grey ,
                     ),
                   ),
+                  SizedBox(width: 6),
                   FutureBuilder<int>(
                     future: fetchLoveCount(),
                     builder: (context, snapshot) {

@@ -774,7 +774,7 @@ class _updateProfilePageState extends State<updateProfilePage> {
                             else
                               GestureDetector(
                                 onTap: () {
-                                  launch('https://www.facebook.com/${_userData?['ownersFb']??''}');
+                                  launch('${_userData?['ownersFb']??''}');
                                 },
                                 child: Text(
                                   _userData?['ownersFb']??'',

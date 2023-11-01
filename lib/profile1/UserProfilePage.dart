@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:petbook/profile1/followers.dart';
 import 'package:petbook/profile1/updateProfile.dart';
 import 'package:petbook/profile1/utils.dart';
 import 'package:petbook/profile1/add_data.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'lovers.dart';
 class UserProfilePage extends StatefulWidget {
   @override
   _UserProfilePageState createState() => _UserProfilePageState();
@@ -271,18 +274,31 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             ListTile(
               leading: Icon(Icons.article),
-              title: Text('Posts', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Who Follows', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Posts" button
-                Navigator.of(context).pop(); // Close the sidebar
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => FollowersPage()),
+
+                ); // Close the sidebar
               },
             ),
             ListTile(
+              leading: Icon(Icons.article),
+              title: Text('Posts', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              onTap: () {
+                // Define the action for "Posts" button
+              }
+            ),
+            ListTile(
               leading: Icon(Icons.favorite),
-              title: Text('Loves', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Who Loves', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Loves" button
-                Navigator.of(context).pop(); // Close the sidebar
+                Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => LoversPage()),
+                );
+
               },
             ),
             ListTile(
@@ -494,54 +510,31 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
 
                   if(!_isEditing)
-                    IconButton(
-                      icon: Icon(
-                        isLoved ? Icons.favorite : Icons.favorite_border, // Toggle between filled and outline heart icons
-                        size: 32, // Increase the icon size
-                        color: isLoved ? Theme.of(context).hintColor : Colors.black, // Change the icon color when loved
-                      ),
+                    ElevatedButton.icon(
                       onPressed: () {
-                        int currentLoveCount = _userData?['loveCount'] ?? 0;
-                        int newLoveCount = isLoved ? currentLoveCount - 1 : currentLoveCount + 1;
-                       // _userData?['loveCount'] = newLoveCount;
-                        // Now, you can update the loveCount in Firestore
-                        _updateLoveCount(newLoveCount);
-                        // Toggle the "love" state when the button is clicked
-                        setState(() {
-                          isLoved = !isLoved;
-                        });
-
-                        // Implement additional actions when loved/unloved
-                        if (isLoved) {
-                          // Perform an action when loved (e.g., add to favorites)
-                        } else {
-                          // Perform an action when unloved (e.g., remove from favorites)
-                        }
+                        // Implement the action for the "Love" button
                       },
-                    )
+                      icon: Icon(
+                          Icons.favorite,
+                        color:  Color(0xFF7A6BBC),
+                      ),
+                      label: Text(
+                          "${_userData?['loveCount']} Love",
+                        style: TextStyle(
+                          color: Color(0xFF7A6BBC)
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFFFF9C4) // Customize the button color
+                      ),
+                    ),
 
                 ],
               ),
             ),
-            if(!_isEditing)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 280), // Adjust the left padding as needed
-                    child: Text(
-                      ' ${_userData?['loveCount'].toString()}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Theme.of(context).hintColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
 
 
-            //SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

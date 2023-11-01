@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ProfileSearch extends StatefulWidget {
   final DocumentSnapshot userData;
 
+
   ProfileSearch({required this.userData});
 
   @override
@@ -16,15 +18,65 @@ class ProfileSearch extends StatefulWidget {
 }
 
 class _ProfileSearchState extends State<ProfileSearch> {
+  bool isFollowing = false;
   bool isLoved = false;
+  bool isLoved2 = false;
+  var flag=0;
+  var flag2=0;
+  final currentUserEmail = FirebaseAuth.instance.currentUser?.email;
+  int currentLoveCount=0;
+
 
   @override
   Widget build(BuildContext context) {
-    final userData = widget.userData; // Access the user data from the widget
+
+    final userData = widget.userData;
+   // int currentLoveCount = userData['loveCount'] ?? 0;
+    Future<int> fetchLoveCount() async {
+      final userRef = FirebaseFirestore.instance.collection('users').doc(widget.userData.id);
+      final doc = await userRef.get();
+      final userData = doc.data() as Map<String, dynamic>;
+      currentLoveCount=userData['loveCount'];
+      return userData['loveCount'] as int;
+    }
+
+
+    print('gh$isLoved');
+    if (currentUserEmail != null && userData != null) {
+      if (flag == 0) {
+        final List<dynamic> lovedByList = userData['lovedBy'] ?? [];
+        if (lovedByList.contains(currentUserEmail)) {
+          isLoved = true;
+        }
+      }
+    }
+
+    if (currentUserEmail != null && userData != null) {
+      if (flag2 == 0) {
+        final List<dynamic> followedBy = userData['followedby'] ?? [];
+        if (followedBy.contains(currentUserEmail)) {
+          isFollowing = true;
+        }
+      }
+    }
+    void toggle(){
+      isLoved = !isLoved;
+      flag++;
+    }
+    void toggle2(){
+      isFollowing = !isFollowing;
+      flag2++;
+    }
+
+    print("ch$isLoved");
+
+
+
+  // Access the user data from the widget
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userData['petName'] ?? 'User Profile'),
+        title: Text(userData['species'] ?? 'User Profile'),
       ),
       body: userData == null
           ? Center(child: CircularProgressIndicator())
@@ -56,113 +108,162 @@ class _ProfileSearchState extends State<ProfileSearch> {
             ),
             SizedBox(height: 16),
 
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 40), // Adjust the left padding as needed
+           // Row(
+            //  children: [
+
+               // SizedBox(width: 16),
+               // Expanded(
+                //  child: Padding(
+                 //   padding: EdgeInsets.only(left: 10), // Adjust the left padding as needed
+                   // child: 
+                  Center(
                     child: Text(
-                      userData['petName'] ?? '',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                        '${userData['petName']}' ?? '',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    UserModel firebaseContact = UserModel.fromMap(widget.userData.data() as Map<String, dynamic>);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPage(user: firebaseContact),
-                      ),
-                    );
-                  },
-                  child: SvgPicture.asset(
-                    'assets/messenger.svg',
-                    color: Theme.of(context).hintColor,
-                    height: 40,
-                    width: 40,
+                 // ),
+                //),
+
+              //  SizedBox(width: 36),
+
+           //   ],
+           // ),
+           Row(
+             children: [
+               Icon(
+                 Icons.location_on,
+                 color: Theme.of(context).hintColor,
+                 size: 30,
+               ),
+               SizedBox(width: 8),
+               Text(
+                 '${userData['location'] ?? 'N/A'}',
+                 style: TextStyle(fontSize: 16),
+               ),
+             ],
+
+           ),
+            SizedBox(height: 10),
+
+            SingleChildScrollView(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      UserModel firebaseContact = UserModel.fromMap(widget.userData.data() as Map<String, dynamic>);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(user: firebaseContact),
+                        ),
+                      );
+                      // Implement the action for the "Message" button
+                    },
+                    icon: Icon(Icons.message),
+                    label: Text("Message"),
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).hintColor, // Customize the button color
+                    ),
                   ),
-                ),
-                Text('      '),
-              ],
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final userRef = FirebaseFirestore.instance.collection('users').doc(widget.userData.id);
+                      List<dynamic> followedBy = List<dynamic>.from(userData['followedby'] ?? []);
+                      if (isFollowing) {
+                        followedBy.remove(currentUserEmail);
+                      } else {
+                        followedBy.add(currentUserEmail);
+                      }
+
+                      await userRef.update({
+                        'followedby': followedBy,
+                      });
+
+                      setState(() {
+                        toggle2();
+                      });
+                    },
+                    icon: Icon(isFollowing ? Icons.person_remove : Icons.person_add), // Change the icon based on follow status
+                    label: Text(isFollowing ? "Following" : "Follow"), // Change the text based on follow status
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: isFollowing ?Theme.of(context).hintColor :Colors.grey ,
+                    ),
+                  ),
+                  FutureBuilder<int>(
+                    future: fetchLoveCount(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // You can return a loading indicator here if needed
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        // Handle the error
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        final updatedLoveCount = snapshot.data ?? 0;
+                        return  ElevatedButton.icon(
+                          onPressed: () async {
+                            final userRef = FirebaseFirestore.instance.collection('users').doc(widget.userData.id);
+                            int currentLoveCount = userData['loveCount'] ?? 0;
+                            List<dynamic> lovedByList = List<dynamic>.from(userData['lovedBy'] ?? []);
+
+                            if (isLoved) {
+                              if (lovedByList.contains(currentUserEmail)) {
+                                lovedByList.remove(currentUserEmail);
+                                currentLoveCount--; // Decrease the love count by 1
+                              }
+                            } else {
+                              if (!lovedByList.contains(currentUserEmail)) {
+                                lovedByList.add(currentUserEmail);
+                                currentLoveCount++; // Increase the love count by 1
+                              }
+                            }
+
+                            await userRef.update({
+                              'lovedBy': lovedByList,
+                              'loveCount': currentLoveCount, // Update the loveCount field
+                            });
+
+
+                            setState(() {
+                              toggle();
+
+                            });
+                          },
+                          icon: Icon(
+                            isLoved ? Icons.favorite : Icons.favorite_border,
+                            color: isLoved ? Color(0xFF7A6BBC) : null, // Set color to red when loved
+                          ),
+                          label: Text("$currentLoveCount Love"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isLoved ? Theme.of(context).hintColor : Colors.grey,
+                          ),
+                        );
+                      }
+                    },
+                  )
+
+
+
+
+
+                ],
+              ),
             ),
 
 
 
 
 
-            SizedBox(height: 16),
-            Row(
-              children: [
-                SizedBox(width: 3),
-                Icon(
-                  Icons.location_on, // Use the location icon
-                  color: Theme.of(context).hintColor, // Customize the icon color
-                  size: 30, // Customize the icon size
-                ),
-                SizedBox(width: 8), // Add spacing between the icon and text
-                Text(
-                  '${userData['location'] ?? 'N/A'}',
-                  style: TextStyle(fontSize: 16), // Customize the text style
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: Icon(
-                        isLoved ? Icons.favorite : Icons.favorite_border, // Toggle between filled and outline heart icons
-                        size: 40, // Increase the icon size
-                        color: isLoved ? Theme.of(context).hintColor : Colors.black, // Change the icon color when loved
-                      ),
-                      onPressed: () async {
-                        int currentLoveCount = userData?['loveCount'] ?? 0;
-                        int newLoveCount = currentLoveCount + 1;
-                        final userRef = FirebaseFirestore.instance.collection('users').doc(widget.userData.id); // Assuming 'users' is your collection name
 
-                        await userRef.update({
-                          'loveCount': newLoveCount,
-                        });
-                        // _userData?['loveCount'] = newLoveCount;
-                        // Now, you can update the loveCount in Firestore
-                       // _updateLoveCount(newLoveCount);
-                        // Toggle the "love" state when the button is clicked
-                        setState(() {
-                          isLoved = !isLoved;
-                        });
 
-                        // Implement additional actions when loved/unloved
-                        if (isLoved) {
-                          // Perform an action when loved (e.g., add to favorites)
-                        } else {
-                          // Perform an action when unloved (e.g., remove from favorites)
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                Text('      '),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: 243), // Adjust the left padding as needed
-                  child: Text(
-                    ' ${userData?['loveCount'].toString()}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).hintColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+
+
 
             SizedBox(height: 16),
             Row(
@@ -242,7 +343,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      launch('https://www.facebook.com/${userData['ownersFb']}');
+                      launch('${userData['ownersFb']}');
                     },
                     child: Container(
                       height: 50,
@@ -261,6 +362,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
               ),
             ),
             SizedBox(height: 16),
+            if(userData['forAdoption']=='yes')
             Container(
               width: 335,
               child: Row(
@@ -273,7 +375,7 @@ class _ProfileSearchState extends State<ProfileSearch> {
                       },
                       icon: Icon(Icons.pets),
                       label: Text(
-                        'Adopt Me',
+                        'Contact with ${userData['ownerName']} to adopt me',
                         style: TextStyle(
                           fontSize: 16,
                           color: Theme.of(context).colorScheme.secondary,
@@ -281,6 +383,37 @@ class _ProfileSearchState extends State<ProfileSearch> {
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).hintColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(color: Colors.blueGrey, width: 0.6),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if(!(userData['forAdoption']=='yes'))
+            Container(
+              width: 335,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        // Define the action for marking the pet for adoption
+                      },
+                      icon: Icon(Icons.pets),
+                      label: Text(
+                        'Not for Adoption',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                           side: BorderSide(color: Colors.blueGrey, width: 0.6),

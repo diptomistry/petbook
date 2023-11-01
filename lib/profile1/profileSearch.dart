@@ -1,5 +1,6 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:petbook/profile1/searchedProfile.dart';
@@ -14,6 +15,9 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
   List<DocumentSnapshot> _userList = [];
   String _selectedOption = 'All'; // Default selection
   TextEditingController _searchController = TextEditingController();
+
+
+
 
   @override
   void initState() {

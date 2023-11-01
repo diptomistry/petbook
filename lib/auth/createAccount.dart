@@ -110,6 +110,7 @@ class _createAccState extends State<createAcc> {
 
 
    CollectionReference users = FirebaseFirestore.instance.collection('users');
+   List<dynamic> groupId = [];
 
    await users.doc(user?.uid).set({
      'petName': _petNameController.text,
@@ -125,7 +126,10 @@ class _createAccState extends State<createAcc> {
      'location':'N/A',
      'forAdoption':'no',
      'loveCount':0,
-      'species':_speciesController.text
+      'species':_speciesController.text,
+     'lovedBy':'',
+     'followedby':'',
+     'groupId':groupId
      // Add more fields as needed
    });
 

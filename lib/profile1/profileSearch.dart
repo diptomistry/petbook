@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,14 +28,21 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
   }
 
   Future<void> _fetchUsersByAdoptionStatus() async {
-    final usersSnapshot = await _firestore.collection('users').where('forAdoption', isEqualTo: _selectedOption == 'For Adoption' ? 'yes' : 'no').get();
+    final usersSnapshot = await _firestore
+        .collection('users')
+        .where('forAdoption',
+            isEqualTo: _selectedOption == 'For Adoption' ? 'yes' : 'no')
+        .get();
     setState(() {
       _userList = usersSnapshot.docs;
     });
   }
 
   Future<void> _fetchUsersBySpecies(String species) async {
-    final usersSnapshot = await _firestore.collection('users').where('species', isEqualTo: species).get();
+    final usersSnapshot = await _firestore
+        .collection('users')
+        .where('species', isEqualTo: species)
+        .get();
     setState(() {
       _userList = usersSnapshot.docs;
     });
@@ -44,18 +50,26 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
 
   void _searchUsers(String query) async {
     if (_selectedOption == 'All') {
-      final allUsersSnapshot = await _firestore.collection('users').where('petName', isGreaterThanOrEqualTo: query).get();
+      final allUsersSnapshot = await _firestore
+          .collection('users')
+          .where('petName', isGreaterThanOrEqualTo: query)
+          .get();
       setState(() {
         _userList = allUsersSnapshot.docs;
       });
     } else {
-      final snapshot = await _firestore.collection('users').where('forAdoption', isEqualTo: _selectedOption == 'For Adoption' ? 'yes' : 'no').get();
+      final snapshot = await _firestore
+          .collection('users')
+          .where('forAdoption',
+              isEqualTo: _selectedOption == 'For Adoption' ? 'yes' : 'no')
+          .get();
       setState(() {
         _userList = snapshot.docs.where((user) {
           final userData = user.data() as Map<String, dynamic>;
           final petName = userData['petName']?.toLowerCase() ?? '';
           final ownerName = userData['ownerName']?.toLowerCase() ?? '';
-          return petName.contains(query.toLowerCase()) || ownerName.contains(query.toLowerCase());
+          return petName.contains(query.toLowerCase()) ||
+              ownerName.contains(query.toLowerCase());
         }).toList();
       });
     }
@@ -88,13 +102,14 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
                     onChanged: (value) {
                       _searchUsers(value);
                     },
+                    style: TextStyle(color: Colors.grey),
                     decoration: InputDecoration(
                       hintText: 'Pet/Owner Name',
-                      hintStyle: TextStyle(color: Colors.grey), // Change the hint text color
+                      hintStyle: TextStyle(
+                          color: Colors.grey), // Change the hint text color
                       prefixIcon: Icon(Icons.search),
                     ),
                   ),
-
                 ),
                 SizedBox(width: 10),
                 Container(
@@ -111,7 +126,8 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
                       setState(() {
                         _selectedOption = newValue!;
                         _searchController.clear();
-                        if (_selectedOption == 'For Adoption' || _selectedOption == 'Not for Adoption') {
+                        if (_selectedOption == 'For Adoption' ||
+                            _selectedOption == 'Not for Adoption') {
                           _fetchUsersByAdoptionStatus();
                         } else if (_selectedOption == 'All') {
                           _fetchAllUsers();
@@ -121,12 +137,21 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
                       });
                     },
                     underline: Container(),
-                    items: <String>['All', 'For Adoption', 'Not for Adoption', 'cat', 'dog', 'bird'].map((String value) {
+                    items: <String>[
+                      'All',
+                      'For Adoption',
+                      'Not for Adoption',
+                      'cat',
+                      'dog',
+                      'bird'
+                    ].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(
                           value,
-                          style: TextStyle(color: Colors.black), // Change the text color here
+                          style: TextStyle(
+                              color:
+                                  Colors.black), // Change the text color here
                         ),
                       );
                     }).toList(),
@@ -135,7 +160,6 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
               ],
             ),
           ),
-
           Expanded(
             child: ListView.builder(
               itemCount: _userList.length,
@@ -143,16 +167,20 @@ class _ProfileSearchPageState extends State<ProfileSearchPage> {
                 final userData = _userList[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(userData['imageLink'] ??
-                        'https://cdn.wallpapersafari.com/51/50/mPlCtx.jpg'),
+                    backgroundImage: CachedNetworkImageProvider(
+                        userData['imageLink'] ??
+                            'https://cdn.wallpapersafari.com/51/50/mPlCtx.jpg'),
                   ),
                   title: Text(
                     userData['petName'] ?? 'Unknown Pet',
-                    style: TextStyle(color: Theme.of(context).hintColor), // Change the text color here
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .hintColor), // Change the text color here
                   ),
                   subtitle: Text(
                     userData['ownerName'] ?? 'Unknown Owner',
-                    style: TextStyle(color: Colors.black), // Change the text color here
+                    style: TextStyle(
+                        color: Colors.black), // Change the text color here
                   ),
                   onTap: () {
                     Navigator.push(

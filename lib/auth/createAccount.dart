@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,7 +12,6 @@ class createAcc extends StatefulWidget {
 }
 
 class _createAccState extends State<createAcc> {
-
   String verificationCode = '';
   final _formKey = GlobalKey<FormState>();
   TextEditingController _petNameController = TextEditingController();
@@ -26,7 +24,7 @@ class _createAccState extends State<createAcc> {
 
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
-  TextEditingController _speciesController=TextEditingController();
+  TextEditingController _speciesController = TextEditingController();
 
   @override
   void dispose() {
@@ -46,22 +44,20 @@ class _createAccState extends State<createAcc> {
   var email, password;
   late bool registrationFailed;
   Timer? timer;
-  bool isEmailverified=false;
+  bool isEmailverified = false;
 
   // Function to store user data in Firestore
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-
 
     User? user = FirebaseAuth.instance.currentUser;
 
-
     if (user == null)
-      isEmailverified=false;
+      isEmailverified = false;
     else
-      isEmailverified=FirebaseAuth.instance.currentUser!.emailVerified;
+      isEmailverified = FirebaseAuth.instance.currentUser!.emailVerified;
     print(isEmailverified);
 
     if (user != null) {
@@ -73,44 +69,37 @@ class _createAccState extends State<createAcc> {
       // No user is signed in
       print('No user is signed in.');
     }
-    if(!isEmailverified) {
+    if (!isEmailverified) {
       timer = Timer.periodic(
         Duration(seconds: 3),
-            (_) => checkEmail() ,
+        (_) => checkEmail(),
       );
     }
-
-
   }
-  Future checkEmail() async {
 
+  Future checkEmail() async {
     //timer?.cancel();
     print(3);
 
     await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
-      isEmailverified=FirebaseAuth.instance.currentUser!.emailVerified;
+      isEmailverified = FirebaseAuth.instance.currentUser!.emailVerified;
     });
-    if(isEmailverified) {
+    if (isEmailverified) {
       print("lsdjfl");
       timer?.cancel();
       storeNow();
 
-
       //storeNow();
-
 
       //Navigator.pushNamed(context, 'profile');
     }
-
   }
+
   Future<void> storeNow() async {
-    print("hello: $isEmailverified");
+    print("hello:$isEmailverified");
 
     final user = FirebaseAuth.instance.currentUser;
-
-    // Get the FCM token
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
@@ -123,23 +112,26 @@ class _createAccState extends State<createAcc> {
       'email': _emailController.text,
       'ownersFb': _ownersFbController.text,
       'uid': user?.uid,
-      'imageLink':
-      'https://cdn.wallpapersafari.com/51/50/mPlCtx.jpg',
+      'imageLink': 'https://cdn.wallpapersafari.com/51/50/mPlCtx.jpg',
       'imageLink2':
-      'https://media.istockphoto.com/id/1390616702/vector/senior-man-avatar-smiling-elderly-man-with-beard-with-gray-hair-3d-vector-people-character.jpg?s=612x612&w=0&k=20&c=CwU892ELqQlY65Xrnmo2N-pb9AE4xEXcp5gAJ6WpKJg=',
+          'https://media.istockphoto.com/id/1390616702/vector/senior-man-avatar-smiling-elderly-man-with-beard-with-gray-hair-3d-vector-people-character.jpg?s=612x612&w=0&k=20&c=CwU892ELqQlY65Xrnmo2N-pb9AE4xEXcp5gAJ6WpKJg=',
       'location': 'N/A',
       'forAdoption': 'no',
       'loveCount': 0,
-      'species': _speciesController.text,
-      'fcmToken': fcmToken, // Add FCM token field
-      'groupId': [], // Initialize an empty array for groupId
+      'species': _speciesController.text
       // Add more fields as needed
     });
 
-    // Navigate to the home page or other destination
+    //Navigator.pushNamed(context, 'profile');
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => HomeNavigationBar(
+          nav_Index: 0,
+        ),
+      ),
+    );
   }
-
-
 
   Future<void> registration() async {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -153,17 +145,15 @@ class _createAccState extends State<createAcc> {
       if (user != null && !registrationFailed) {
         // Store user data in Firestore
 
-
         // Send email verification
         await user.sendEmailVerification();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Email verification link sent to $email. Please check your email.'),
+            content: Text(
+                'Email verification link sent to $email. Please check your email.'),
             backgroundColor: Colors.yellow,
           ),
         );
-
-
 
         //FirebaseAuth.instance.currentUser?.emailVerified;
 
@@ -182,7 +172,6 @@ class _createAccState extends State<createAcc> {
     }
   }
 
-
   String extractErrorMessage(String fullErrorMessage) {
     int startIndex = fullErrorMessage.indexOf(']') + 1;
     return fullErrorMessage.substring(startIndex).trim();
@@ -190,7 +179,7 @@ class _createAccState extends State<createAcc> {
 
   bool validateEmail(String email) {
     final RegExp emailRegex =
-    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
+        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$', caseSensitive: false);
     return emailRegex.hasMatch(email);
   }
 
@@ -315,7 +304,6 @@ class _createAccState extends State<createAcc> {
                               return null;
                             },
                           ),
-
                           roundedTextField(
                             controller: _ownersFbController,
                             hintText: 'Owners Facebook(Optional)',
@@ -344,18 +332,17 @@ class _createAccState extends State<createAcc> {
                               return null;
                             },
                           ),
-
                           Row(
                             children: [
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                     // String email = _emailController.text;
-                                     // String password = _passwordController.text;
+                                      // String email = _emailController.text;
+                                      // String password = _passwordController.text;
 
                                       // Call the registration method with email and password
-                                    //  registration(email, password);
+                                      //  registration(email, password);
                                       registration();
                                       // Perform registration logic
                                       if (password.length >= 6)
@@ -372,7 +359,7 @@ class _createAccState extends State<createAcc> {
                                               .secondary)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                    Theme.of(context).hintColor,
+                                        Theme.of(context).hintColor,
                                     // Customize the button color
                                     //foregroundColor: Colors.white,
                                     // Customize the text color
@@ -386,7 +373,6 @@ class _createAccState extends State<createAcc> {
                               ),
                             ],
                           ),
-
                         ],
                       ),
                     ],
@@ -407,7 +393,6 @@ class _createAccState extends State<createAcc> {
     FormFieldValidator<String>? validator,
   }) {
     return Container(
-
       margin: EdgeInsets.only(bottom: 13.0),
       child: TextFormField(
         controller: controller,
@@ -428,7 +413,7 @@ class _createAccState extends State<createAcc> {
             //borderSide: BorderSide.none,
           ),
           contentPadding:
-          EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+              EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
           errorText: controller.text.isNotEmpty && validator != null
               ? validator(controller.text)
               : null,
@@ -438,4 +423,3 @@ class _createAccState extends State<createAcc> {
     );
   }
 }
-

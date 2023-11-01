@@ -405,12 +405,12 @@ class _HomePageState extends State<HomePage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20.0),
-                  bottomRight: Radius.circular(20.0),
+                  bottomLeft: Radius.circular(24.0),
+                  bottomRight: Radius.circular(24.0),
                 ),
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.04,
-                  color: Color(0xFFFFF9C4),
+                  height: MediaQuery.of(context).size.height * 0.044,
+                  color: Color(0xFF00a19d),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -419,9 +419,9 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         'PetBook',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.white),
                       ),
                       Spacer(),
                       GestureDetector(
@@ -434,9 +434,10 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                         child: Image.asset(
-                          'assets/add-file.png',
-                          height: 27,
-                          width: 30,
+                          'assets/add.png',
+                          height: 30,
+                          width: 36,
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(width: 20),

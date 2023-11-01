@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -103,42 +104,41 @@ class _createAccState extends State<createAcc> {
     }
 
   }
-  Future<void> storeNow() async{
-   print("hello:$isEmailverified");
+  Future<void> storeNow() async {
+    print("hello: $isEmailverified");
 
-    final user=FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
 
+    // Get the FCM token
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
 
-   CollectionReference users = FirebaseFirestore.instance.collection('users');
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-   await users.doc(user?.uid).set({
-     'petName': _petNameController.text,
-     'petGender': _petGenderController.text,
-     'petAge': _petAgeController.text,
-     'petWeight': _petWeightController.text,
-     'ownerName': _ownerNameController.text,
-     'email': _emailController.text,
-     'ownersFb': _ownersFbController.text,
-     'uid': user?.uid,
-     'imageLink':'https://cdn.wallpapersafari.com/51/50/mPlCtx.jpg',
-     'imageLink2':'https://media.istockphoto.com/id/1390616702/vector/senior-man-avatar-smiling-elderly-man-with-beard-with-gray-hair-3d-vector-people-character.jpg?s=612x612&w=0&k=20&c=CwU892ELqQlY65Xrnmo2N-pb9AE4xEXcp5gAJ6WpKJg=',
-     'location':'N/A',
-     'forAdoption':'no',
-     'loveCount':0,
-      'species':_speciesController.text
-     // Add more fields as needed
-   });
+    await users.doc(user?.uid).set({
+      'petName': _petNameController.text,
+      'petGender': _petGenderController.text,
+      'petAge': _petAgeController.text,
+      'petWeight': _petWeightController.text,
+      'ownerName': _ownerNameController.text,
+      'email': _emailController.text,
+      'ownersFb': _ownersFbController.text,
+      'uid': user?.uid,
+      'imageLink':
+      'https://cdn.wallpapersafari.com/51/50/mPlCtx.jpg',
+      'imageLink2':
+      'https://media.istockphoto.com/id/1390616702/vector/senior-man-avatar-smiling-elderly-man-with-beard-with-gray-hair-3d-vector-people-character.jpg?s=612x612&w=0&k=20&c=CwU892ELqQlY65Xrnmo2N-pb9AE4xEXcp5gAJ6WpKJg=',
+      'location': 'N/A',
+      'forAdoption': 'no',
+      'loveCount': 0,
+      'species': _speciesController.text,
+      'fcmToken': fcmToken, // Add FCM token field
+      'groupId': [], // Initialize an empty array for groupId
+      // Add more fields as needed
+    });
 
-   //Navigator.pushNamed(context, 'profile');
-   Navigator.push(
-     context,
-     CupertinoPageRoute(
-       builder: (context) => HomeNavigationBar(
-         nav_Index: 0,
-       ),
-     ),
-   );
+    // Navigate to the home page or other destination
   }
+
 
 
   Future<void> registration() async {

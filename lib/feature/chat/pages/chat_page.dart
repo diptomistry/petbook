@@ -1,24 +1,20 @@
 import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:petbook/common/extension/custon_theme_extension.dart';
-import 'package:petbook/common/modelss/user_model.dart';
-import 'package:petbook/common/routes/routes.dart';
-import 'package:petbook/common/widgets/custom_icon_button.dart';
-import 'package:petbook/feature/auth/controller/auth_controller.dart';
-import 'package:petbook/feature/chat/controller/chat_controller.dart';
-import 'package:petbook/feature/chat/widgets/chat_text_field.dart';
-import 'package:petbook/feature/chat/widgets/message_card.dart';
-import 'package:petbook/feature/chat/widgets/show_date_card.dart';
-import 'package:petbook/feature/chat/widgets/yellow_card.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petbook/common/helper/last_seen_message.dart';
+import 'package:petbook/common/modelss/user_model.dart';
+import 'package:petbook/common/widgets/custom_icon_button.dart';
+import 'package:petbook/feature/auth/controller/auth_controller.dart';
+import 'package:petbook/feature/chat/controller/chat_controller.dart';
+import 'package:petbook/feature/chat/notificationmanager.dart';
+import 'package:petbook/feature/chat/widgets/chat_text_field.dart';
+import 'package:petbook/feature/chat/widgets/message_card.dart';
+import 'package:petbook/feature/chat/widgets/show_date_card.dart';
+import 'package:petbook/feature/chat/widgets/yellow_card.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../common/helper/last_seen_message.dart';
-
 
 final pageStorageBucket = PageStorageBucket();
 
@@ -27,13 +23,20 @@ class ChatPage extends ConsumerWidget {
 
   final UserModel user;
   final ScrollController scrollController = ScrollController();
+  bool notificationManagerInitialized = false;
+  final NotificationManager notificationManager = NotificationManager();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (!notificationManagerInitialized) {
+      notificationManager.initialize();
+      notificationManagerInitialized = true;
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blueAccent,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -181,7 +184,7 @@ class ChatPage extends ConsumerWidget {
                     controller: scrollController,
                     itemBuilder: (_, index) {
                       final message = snapshot.data![index];
-                      final isSender = message.senderId == FirebaseAuth.instance.currentUser!.uid;
+                      final isSender = message.senderId == FirebaseAuth.instance.currentUser?.uid;
 
                       final haveNip = (index == 0) ||
                           (index == snapshot.data!.length - 1 &&

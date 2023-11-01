@@ -3,19 +3,23 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:petbook/NavBar/HomeNavBar.dart';
 import 'package:petbook/profile1/updateProfile.dart';
 import 'package:petbook/profile1/utils.dart';
 import 'package:petbook/profile1/add_data.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 class UserProfilePage extends StatefulWidget {
   @override
   _UserProfilePageState createState() => _UserProfilePageState();
 }
+
 class _UserProfilePageState extends State<UserProfilePage> {
   bool isMarkedForAdoption = false;
   String forAdoptionStatus = 'Mark for Adoption';
-
 
   String? _userImageUrl;
   String? _userImage2Url;
@@ -33,17 +37,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
   TextEditingController _petAgeController = TextEditingController();
   TextEditingController _petWeightController = TextEditingController();
   TextEditingController _ownerNameController = TextEditingController();
-  TextEditingController locationController= TextEditingController();
-
-
+  TextEditingController locationController = TextEditingController();
 
   void toggleTextEntry() {
     setState(() {
       isTextEntryVisible = !isTextEntryVisible;
     });
   }
-
-
 
   @override
   void dispose() {
@@ -64,12 +64,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
       _image = img;
     });
   }
+
   void selectImage2() async {
     Uint8List img2 = await pickImage(ImageSource.gallery);
     setState(() {
       _image2 = img2;
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -78,6 +80,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     print("Initiating user data fetch...");
     _fetchUserData();
   }
+
   Future<void> _updateLoveCount(int newLoveCount) async {
     // Get the document reference of the user's profile in Firestore
     try {
@@ -105,12 +108,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
     if (_user == null) {
       print("User is not signed in.");
       return;
-    }
-    else
+    } else
       print("User is not in.");
 
     try {
-      DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user.uid)
+          .get();
       setState(() {
         _userData = userData;
         // print("a:$_userData");
@@ -127,7 +132,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     setState(() {
       _isEditing = true;
     });
-
   }
 
   Future<void> _updateLocation(String location) async {
@@ -144,19 +148,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
           await docRef.update({
             'location': location,
           });
-
         }
       }
     } catch (err) {
       print(err.toString());
     }
   }
+
   Future<String?> _fetchLocation() async {
     String? location;
     if (_user != null) {
       try {
-        DocumentSnapshot userData =
-        await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_user.uid)
+            .get();
         location = userData['location'];
       } catch (e) {
         print("Error fetching location data: $e");
@@ -166,19 +172,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Future<void> _saveProfile() async {
-
     Future<void> _fetchUserData() async {
-      DocumentSnapshot userData =
-      await FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user.uid)
+          .get();
       setState(() {
         //_userData = userData;
         _userImageUrl = userData['imageLink'];
         _userImage2Url = userData['imageLink2'];
         print(_userImageUrl);
-
-
       });
     }
+
     setState(() {
       _isEditing = false;
     });
@@ -186,35 +192,31 @@ class _UserProfilePageState extends State<UserProfilePage> {
     // Add logic to save the profile changes to Firebase
     // You can use _userData to update the Firebase document
     String? petName = _petNameController.text;
-    String? petGender=_petGenderController.text;
-    String? petAge=_petAgeController.text;
-    String? petWeight=_petWeightController.text;
+    String? petGender = _petGenderController.text;
+    String? petAge = _petAgeController.text;
+    String? petWeight = _petWeightController.text;
     //String? email=_emailController.text;
-    String? ownersFb=_ownersFbController.text;
-    String? ownerName=_ownerNameController.text;
+    String? ownersFb = _ownersFbController.text;
+    String? ownerName = _ownerNameController.text;
     print("Pet Name: $petName");
     String? userEmail = _user.email;
     print(_user.email);
-    print(_image);// Get the user's email
-    if (userEmail != null && _image != null&&_image2!=null) {
+    print(_image); // Get the user's email
+    if (userEmail != null && _image != null && _image2 != null) {
       await StoreData().saveData(
         userEmail: userEmail,
         file1: _image!,
         file2: _image2!,
         petName: petName,
-        petGender:petGender,
-        petAge:petAge,
-        petWeight:petWeight,
+        petGender: petGender,
+        petAge: petAge,
+        petWeight: petWeight,
         //email:email,
         ownersFb: ownersFb,
-        ownerName:ownerName,
-
-
-
+        ownerName: ownerName,
       );
       // You can add additional logic here if needed
     }
-
 
     Navigator.push(
       context,
@@ -227,20 +229,20 @@ class _UserProfilePageState extends State<UserProfilePage> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
         title: Text('Profile'),
         backgroundColor: Theme.of(context).hintColor,
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: Icon(Icons.menu), // Replace with the icon you want for the menu
+              icon: Icon(
+                  Icons.menu), // Replace with the icon you want for the menu
               onPressed: () {
-                Scaffold.of(context).openDrawer(); // Open the sidebar when the menu button is clicked
+                Scaffold.of(context)
+                    .openDrawer(); // Open the sidebar when the menu button is clicked
               },
             );
           },
@@ -267,19 +269,29 @@ class _UserProfilePageState extends State<UserProfilePage> {
               onTap: () {
                 Navigator.of(context).pop(); // Close the sidebar
               },
-
             ),
             ListTile(
               leading: Icon(Icons.article),
-              title: Text('Posts', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Posts',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black)), // Increase font size
               onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeNavigationBar(
+                              nav_Index: 0,
+                            )));
+                // Get.to(HomeNavigationBar(nav_Index: 0));
                 // Define the action for "Posts" button
-                Navigator.of(context).pop(); // Close the sidebar
+                //Navigator.of(context).pop(); // Close the sidebar
               },
             ),
             ListTile(
               leading: Icon(Icons.favorite),
-              title: Text('Loves', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Loves',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Loves" button
                 Navigator.of(context).pop(); // Close the sidebar
@@ -287,7 +299,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             ListTile(
               leading: Icon(Icons.lock),
-              title: Text('Profile Lock', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Profile Lock',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Profile Lock" button
                 Navigator.of(context).pop(); // Close the sidebar
@@ -295,7 +309,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             ListTile(
               leading: Icon(Icons.circle),
-              title: Text('Active Status', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Active Status',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Active Status" button
                 Navigator.of(context).pop(); // Close the sidebar
@@ -303,7 +319,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             ListTile(
               leading: Icon(Icons.dark_mode),
-              title: Text('Dark Mode', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Dark Mode',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Dark Mode" button
                 Navigator.of(context).pop(); // Close the sidebar
@@ -311,7 +329,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             ListTile(
               leading: Icon(Icons.lock),
-              title: Text('Privacy and Security', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Privacy and Security',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Privacy and Security" button
                 Navigator.of(context).pop(); // Close the sidebar
@@ -319,7 +339,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
             ),
             ListTile(
               leading: Icon(Icons.help),
-              title: Text('Help & Support', style: TextStyle(fontSize: 16,color: Colors.black)), // Increase font size
+              title: Text('Help & Support',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.black)), // Increase font size
               onTap: () {
                 // Define the action for "Help & Support" button
                 Navigator.of(context).pop(); // Close the sidebar
@@ -335,24 +357,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   Expanded(
                     //button in the whole row
                     child: ElevatedButton(
-                      onPressed:(){},
+                      onPressed: () {},
                       child: Text(
                         'Logout',
                         style: TextStyle(
                             fontSize: 16,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .secondary),
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:Colors.grey,
+                        backgroundColor: Colors.grey,
                         // Customize the button color
                         // foregroundColor: Colors.red,
                         // Customize the text color
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(
-                              color: Colors.blueGrey, width: 0.6),
+                          side: BorderSide(color: Colors.blueGrey, width: 0.6),
                         ),
                       ),
                     ),
@@ -360,547 +379,583 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ],
               ),
             ),
-
-
-
-
           ],
         ),
       ),
       body: _userData == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                if (_image != null && _isEditing)
-                  Container(
-                    width: 328,
-                    height: 216,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(16.0),
-                      image: DecorationImage(
-                        image: MemoryImage(_image!),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
-                else
-                  CachedNetworkImage(
-                    imageUrl: _userImageUrl??
-                        'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg', // Use the image URL from Firestore
-                    placeholder: (context, url) => CircularProgressIndicator(), // Add a placeholder widget
-                    errorWidget: (context, url, error) => Icon(Icons.error), // Add an error widget
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 328,
-                      height: 216,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(16.0),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                if (_isEditing)
-                  Positioned(
-                    bottom: 0,
-                    right: 1,
-                    child: IconButton(
-                      onPressed: selectImage,
-                      icon: Icon(Icons.add_a_photo),
-                    ),
-                  ),
-              ],
-            ),
-
-            Text(
-                ''
-            ),
-            Center(
-              child: _isEditing
-                  ? TextFormField(
-                controller: _petNameController,
-                decoration: InputDecoration(
-                  hintText: '   Pet Name',
-                ),
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              )
-                  : Text(
-                '${_userData?['petName']} (${_userData?['species']})' ?? '',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 335,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  Row(
+                  Stack(
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.add_location,
-                          color: Theme.of(context).hintColor,
+                      if (_image != null && _isEditing)
+                        Container(
+                          width: 328,
+                          height: 216,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(16.0),
+                            image: DecorationImage(
+                              image: MemoryImage(_image!),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      else
+                        CachedNetworkImage(
+                          imageUrl: _userImageUrl ??
+                              'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg', // Use the image URL from Firestore
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(), // Add a placeholder widget
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error), // Add an error widget
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 328,
+                            height: 216,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(16.0),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                         ),
-                        onPressed: () {
-                          // Toggle the visibility of the text entry when the icon is clicked
-                          toggleTextEntry();
-                        },
-                      ),
-                      if (!isTextEntryVisible)
-                        Text(
-                          _userData?['location']??'Add Location',
-
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
+                      if (_isEditing)
+                        Positioned(
+                          bottom: 0,
+                          right: 1,
+                          child: IconButton(
+                            onPressed: selectImage,
+                            icon: Icon(Icons.add_a_photo),
                           ),
                         ),
                     ],
                   ),
-                  if (isTextEntryVisible)
-                    Flexible(
-                      child: TextField(
-                        controller: locationController,
-                        decoration: InputDecoration(
-                          hintText: 'Location...',
-                          hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                        ),
-                        style: TextStyle(color: Colors.black),
-                        onSubmitted: (location) async {
-                          await _updateLocation(location);
-                          toggleTextEntry();
-                          await _fetchUserData();
-                          // Fetch updated user data including the location
-                          //String? updatedLocation = await _fetchLocation();
-                          //locationController.text = updatedLocation ?? '';
-                        },
-                      ),
-                    ),
 
-
-                  if(!_isEditing)
-                    IconButton(
-                      icon: Icon(
-                        isLoved ? Icons.favorite : Icons.favorite_border, // Toggle between filled and outline heart icons
-                        size: 32, // Increase the icon size
-                        color: isLoved ? Theme.of(context).hintColor : Colors.black, // Change the icon color when loved
-                      ),
-                      onPressed: () {
-                        int currentLoveCount = _userData?['loveCount'] ?? 0;
-                        int newLoveCount = isLoved ? currentLoveCount - 1 : currentLoveCount + 1;
-                       // _userData?['loveCount'] = newLoveCount;
-                        // Now, you can update the loveCount in Firestore
-                        _updateLoveCount(newLoveCount);
-                        // Toggle the "love" state when the button is clicked
-                        setState(() {
-                          isLoved = !isLoved;
-                        });
-
-                        // Implement additional actions when loved/unloved
-                        if (isLoved) {
-                          // Perform an action when loved (e.g., add to favorites)
-                        } else {
-                          // Perform an action when unloved (e.g., remove from favorites)
-                        }
-                      },
-                    )
-
-                ],
-              ),
-            ),
-            if(!_isEditing)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
+                  Text(''),
+                  Center(
+                    child: _isEditing
+                        ? TextFormField(
+                            controller: _petNameController,
+                            decoration: InputDecoration(
+                              hintText: '   Pet Name',
+                            ),
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            '${_userData?['petName']} (${_userData?['species']})' ??
+                                '',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                  ),
                   Container(
-                    padding: EdgeInsets.only(left: 280), // Adjust the left padding as needed
-                    child: Text(
-                      ' ${_userData?['loveCount'].toString()}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Theme.of(context).hintColor,
+                    width: 335,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.add_location,
+                                color: Theme.of(context).hintColor,
+                              ),
+                              onPressed: () {
+                                // Toggle the visibility of the text entry when the icon is clicked
+                                toggleTextEntry();
+                              },
+                            ),
+                            if (!isTextEntryVisible)
+                              Text(
+                                _userData?['location'] ?? 'Add Location',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                          ],
+                        ),
+                        if (isTextEntryVisible)
+                          Flexible(
+                            child: TextField(
+                              controller: locationController,
+                              decoration: InputDecoration(
+                                hintText: 'Location...',
+                                hintStyle: TextStyle(
+                                    color: Theme.of(context).hintColor),
+                              ),
+                              style: TextStyle(color: Colors.black),
+                              onSubmitted: (location) async {
+                                await _updateLocation(location);
+                                toggleTextEntry();
+                                await _fetchUserData();
+                                // Fetch updated user data including the location
+                                //String? updatedLocation = await _fetchLocation();
+                                //locationController.text = updatedLocation ?? '';
+                              },
+                            ),
+                          ),
+                        if (!_isEditing)
+                          IconButton(
+                            icon: Icon(
+                              isLoved
+                                  ? Icons.favorite
+                                  : Icons
+                                      .favorite_border, // Toggle between filled and outline heart icons
+                              size: 32, // Increase the icon size
+                              color: isLoved
+                                  ? Theme.of(context).hintColor
+                                  : Colors
+                                      .black, // Change the icon color when loved
+                            ),
+                            onPressed: () {
+                              int currentLoveCount =
+                                  _userData?['loveCount'] ?? 0;
+                              int newLoveCount = isLoved
+                                  ? currentLoveCount - 1
+                                  : currentLoveCount + 1;
+                              // _userData?['loveCount'] = newLoveCount;
+                              // Now, you can update the loveCount in Firestore
+                              _updateLoveCount(newLoveCount);
+                              // Toggle the "love" state when the button is clicked
+                              setState(() {
+                                isLoved = !isLoved;
+                              });
+
+                              // Implement additional actions when loved/unloved
+                              if (isLoved) {
+                                // Perform an action when loved (e.g., add to favorites)
+                              } else {
+                                // Perform an action when unloved (e.g., remove from favorites)
+                              }
+                            },
+                          )
+                      ],
+                    ),
+                  ),
+                  if (!_isEditing)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(
+                              left: 280), // Adjust the left padding as needed
+                          child: Text(
+                            ' ${_userData?['loveCount'].toString()}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                  //SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      if (!_isEditing)
+                        _buildInfoColumn(
+                          label: 'Gender',
+                          value: _userData?['petGender'] ?? '',
+                          color: Color(0xFFDDD8AE),
+                        ),
+                      if (_isEditing)
+                        _buildInfoColumnEdit(
+                          label: 'Gender',
+                          color: Color(0xFFDDD8AE),
+                          controller: _petGenderController,
+                        ),
+                      if (!_isEditing)
+                        _buildInfoColumn(
+                          label: 'Age',
+                          value: _userData?['petAge'] ?? '',
+                          color: Color(0xFFDDD8AE),
+                        ),
+                      if (_isEditing)
+                        _buildInfoColumnEdit(
+                          label: 'Age',
+                          color: Color(0xFFDDD8AE),
+                          controller: _petAgeController,
+                        ),
+                      if (!_isEditing)
+                        _buildInfoColumn(
+                          label: 'Weight',
+                          value: _userData?['petWeight'] ?? '',
+                          color: Color(0xFFDDD8AE),
+                        ),
+                      if (_isEditing)
+                        _buildInfoColumnEdit(
+                          label: 'Weight',
+                          color: Color(0xFFDDD8AE),
+                          controller: _petWeightController,
+                        ),
+                    ],
+                  ),
+                  //if(_isEditing)
+                  if (!_isEditing) SizedBox(height: 26),
+                  if (!_isEditing)
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: [
+                          Stack(
+                            children: [
+                              if (_image2 != null && _isEditing)
+                                CircleAvatar(
+                                  radius: 44,
+                                  backgroundImage: MemoryImage(_image2!),
+                                )
+                              else
+                                CachedNetworkImage(
+                                  imageUrl: _userImage2Url ??
+                                      'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg', // Use the image URL from Firestore
+                                  imageBuilder: (context, imageProvider) =>
+                                      CircleAvatar(
+                                    radius: 44,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(), // You can use any placeholder widget
+                                  errorWidget: (context, url, error) => Icon(Icons
+                                      .error), // You can use any error widget
+                                ),
+                              if (_isEditing)
+                                Positioned(
+                                  bottom:
+                                      -10, // Adjust the top position of the button
+                                  right:
+                                      -15, // Adjust the right position of the button
+                                  child: IconButton(
+                                    onPressed: selectImage2,
+                                    icon: Icon(
+                                      Icons.add_a_photo,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Container(
+                              width: 200,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${_userData?['ownerName'] ?? ''}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text('Pet Owner'),
+                                ],
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              launch('mailto:${_userData?['email'] ?? ''}');
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              margin: EdgeInsets.only(right: 30),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFDDD8AE),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child:
+                                    Icon(Icons.email, color: Color(0xFF00a19d)),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              launch(
+                                  'https://www.facebook.com/${_userData?['ownersFb'] ?? ''}');
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              margin: EdgeInsets.only(right: 30),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFDDD8AE),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Icon(Icons.facebook,
+                                    color: Color(0xFF00a19d)),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                  if (_isEditing)
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: [
+                          Stack(
+                            children: [
+                              if (_image2 != null && _isEditing)
+                                CircleAvatar(
+                                  radius: 44,
+                                  backgroundImage: MemoryImage(_image2!),
+                                )
+                              else
+                                CircleAvatar(
+                                  radius: 44,
+                                  backgroundImage: NetworkImage(_userImage2Url ??
+                                      'https://firebasestorage.googleapis.com/v0/b/petbook-8daf6.appspot.com/o/profileImage?alt=media&token=6033552b-4966-44b4-885c-11c3e742e0aa'), // Use the image URL from Firestore
+                                ),
+                              if (_isEditing)
+                                Positioned(
+                                  bottom:
+                                      -10, // Adjust the top position of the button
+                                  right:
+                                      -15, // Adjust the right position of the button
+                                  child: IconButton(
+                                    onPressed: selectImage2,
+                                    icon: Icon(
+                                      Icons.add_a_photo,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Container(
+                              width: 200,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (_isEditing)
+                                    TextFormField(
+                                      controller: _ownerNameController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Owner Name...',
+                                      ),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    )
+                                  else
+                                    Text(
+                                      _userData?['ownerName'] ??
+                                          '', // Add null check
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+
+                                  // if (_isEditing)
+                                  //   TextFormField(
+                                  //     controller: _emailController,
+                                  //     decoration: InputDecoration(
+                                  //       hintText: 'Email...',
+                                  //     ),
+                                  //     style: TextStyle(
+                                  //
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //   )
+                                  // else
+                                  //   GestureDetector(
+                                  //     onTap: () {
+                                  //       launch('mailto:${_userData?['email']??''}');
+                                  //     },
+                                  //     child: Text(
+                                  //       _userData?['email']??'',
+                                  //       style: TextStyle(
+                                  //         color: Color(0xFF00a19d),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  if (_isEditing)
+                                    TextFormField(
+                                      controller: _ownersFbController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Facebook...',
+                                      ),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    )
+                                  else
+                                    GestureDetector(
+                                      onTap: () {
+                                        launch(
+                                            'https://www.facebook.com/${_userData?['ownersFb'] ?? ''}');
+                                      },
+                                      child: Text(
+                                        _userData?['ownersFb'] ?? '',
+                                        style: TextStyle(
+                                          color: Color(0xFF00a19d),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  SizedBox(height: 16),
+                  FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(_userData?.id)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(); // While waiting for data, show a loading indicator.
+                      } else {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          final user =
+                              snapshot.data?.data() as Map<String, dynamic>?;
+                          //if (user?['forAdoption'] == 'yes')isMarkedForAdoption=false;
+                          //else
+                          //  isMarkedForAdoption=true;
+
+                          // Check if the 'forAdoption' field is 'yes'
+                          if (user?['forAdoption'] == 'yes') {
+                            return Container(
+                              width: 335,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () async {
+                                        setState(() {
+                                          isMarkedForAdoption =
+                                              !isMarkedForAdoption; // Toggle adoption status
+                                        });
+                                        final userDoc = FirebaseFirestore
+                                            .instance
+                                            .collection('users')
+                                            .doc(_userData?.id);
+                                        await userDoc.update({
+                                          'forAdoption': isMarkedForAdoption
+                                              ? 'yes'
+                                              : 'no',
+                                        });
+                                        // await markForAdoption(isMarkedForAdoption);
+                                      },
+                                      icon: Icon(Icons.pets),
+                                      label: Text(
+                                        '${_userData?['petName']} is marked for adoption', // Show the status text here
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Theme.of(context).hintColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: BorderSide(
+                                              color: Colors.blueGrey,
+                                              width: 0.6),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              width: 335,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () async {
+                                        setState(() {
+                                          isMarkedForAdoption =
+                                              !isMarkedForAdoption; // Toggle adoption status
+                                        });
+                                        final userDoc = FirebaseFirestore
+                                            .instance
+                                            .collection('users')
+                                            .doc(_userData?.id);
+                                        await userDoc.update({
+                                          'forAdoption': isMarkedForAdoption
+                                              ? 'yes'
+                                              : 'no',
+                                        });
+                                        // await markForAdoption(isMarkedForAdoption);
+                                      },
+                                      icon: Icon(Icons.pets),
+                                      label: Text(
+                                        'Mark for adoption', // Show the status text here
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Theme.of(context).hintColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: BorderSide(
+                                              color: Colors.blueGrey,
+                                              width: 0.6),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      }
+                    },
                   ),
                 ],
               ),
-
-
-            //SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                if(!_isEditing)
-                  _buildInfoColumn(
-                    label: 'Gender',
-                    value:  _userData?['petGender']??'',
-                    color: Color(0xFFDDD8AE),
-                  ),
-                if(_isEditing)
-                  _buildInfoColumnEdit(
-                    label: 'Gender',
-                    color: Color(0xFFDDD8AE),
-                    controller: _petGenderController,
-                  ),
-                if(!_isEditing)
-                  _buildInfoColumn(
-                    label: 'Age',
-                    value:  _userData?['petAge']??'',
-                    color: Color(0xFFDDD8AE),
-                  ),
-                if(_isEditing)
-                  _buildInfoColumnEdit(
-                    label: 'Age',
-                    color: Color(0xFFDDD8AE), controller: _petAgeController,
-                  ),
-                if(!_isEditing)
-                  _buildInfoColumn(
-                    label: 'Weight',
-                    value: _userData?['petWeight']??'',
-                    color: Color(0xFFDDD8AE),
-                  ),
-                if(_isEditing)
-                  _buildInfoColumnEdit(
-                    label: 'Weight',
-                    color: Color(0xFFDDD8AE), controller: _petWeightController,
-                  ),
-              ],
             ),
-            //if(_isEditing)
-            if(!_isEditing)
-              SizedBox(height: 26),
-            if (!_isEditing)
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Row(
-                  children: [
-                    Stack(
-                      children: [
-                        if (_image2 != null && _isEditing)
-                          CircleAvatar(
-                            radius: 44,
-                            backgroundImage: MemoryImage(_image2!),
-                          )
-                        else
-                          CachedNetworkImage(
-                            imageUrl: _userImage2Url??
-                                'https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg', // Use the image URL from Firestore
-                            imageBuilder: (context, imageProvider) => CircleAvatar(
-                              radius: 44,
-                              backgroundImage: imageProvider,
-                            ),
-                            placeholder: (context, url) => CircularProgressIndicator(), // You can use any placeholder widget
-                            errorWidget: (context, url, error) => Icon(Icons.error), // You can use any error widget
-                          ),
-                        if (_isEditing)
-                          Positioned(
-                            bottom: -10, // Adjust the top position of the button
-                            right: -15, // Adjust the right position of the button
-                            child: IconButton(
-                              onPressed: selectImage2,
-                              icon: Icon(
-                                Icons.add_a_photo,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        width: 200,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${_userData?['ownerName']??''}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            Text('Pet Owner'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        launch('mailto:${_userData?['email']??''}');
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        margin: EdgeInsets.only(right: 30),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFDDD8AE),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Icon(Icons.email, color: Color(0xFF00a19d)),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        launch('https://www.facebook.com/${_userData?['ownersFb']??''}');
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        margin: EdgeInsets.only(right: 30),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFDDD8AE),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Icon(Icons.facebook, color: Color(0xFF00a19d)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            if(_isEditing)
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Row(
-                  children: [
-                    Stack(
-                      children: [
-                        if (_image2 != null && _isEditing)
-                          CircleAvatar(
-                            radius: 44,
-                            backgroundImage: MemoryImage(_image2!),
-                          )
-                        else
-                          CircleAvatar(
-                            radius: 44,
-                            backgroundImage: NetworkImage(_userImage2Url??
-                                'https://firebasestorage.googleapis.com/v0/b/petbook-8daf6.appspot.com/o/profileImage?alt=media&token=6033552b-4966-44b4-885c-11c3e742e0aa'), // Use the image URL from Firestore
-                          ),
-                        if (_isEditing)
-                          Positioned(
-                            bottom: -10, // Adjust the top position of the button
-                            right: -15, // Adjust the right position of the button
-                            child: IconButton(
-                              onPressed: selectImage2,
-                              icon: Icon(
-                                Icons.add_a_photo,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        width: 200,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (_isEditing)
-                              TextFormField(
-                                controller: _ownerNameController,
-                                decoration: InputDecoration(
-                                  hintText: 'Owner Name...',
-                                ),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              )
-                            else
-                              Text(
-                                _userData?['ownerName'] ?? '', // Add null check
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-
-                            // if (_isEditing)
-                            //   TextFormField(
-                            //     controller: _emailController,
-                            //     decoration: InputDecoration(
-                            //       hintText: 'Email...',
-                            //     ),
-                            //     style: TextStyle(
-                            //
-                            //       color: Colors.black,
-                            //     ),
-                            //   )
-                            // else
-                            //   GestureDetector(
-                            //     onTap: () {
-                            //       launch('mailto:${_userData?['email']??''}');
-                            //     },
-                            //     child: Text(
-                            //       _userData?['email']??'',
-                            //       style: TextStyle(
-                            //         color: Color(0xFF00a19d),
-                            //       ),
-                            //     ),
-                            //   ),
-                            if (_isEditing)
-                              TextFormField(
-                                controller: _ownersFbController,
-                                decoration: InputDecoration(
-                                  hintText: 'Facebook...',
-                                ),
-                                style: TextStyle(
-
-                                  color: Colors.black,
-                                ),
-                              )
-                            else
-                              GestureDetector(
-                                onTap: () {
-                                  launch('https://www.facebook.com/${_userData?['ownersFb']??''}');
-                                },
-                                child: Text(
-                                  _userData?['ownersFb']??'',
-                                  style: TextStyle(
-                                    color: Color(0xFF00a19d),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-
-            SizedBox(height: 16),
-            FutureBuilder<DocumentSnapshot>(
-
-              future: FirebaseFirestore.instance.collection('users').doc(_userData?.id).get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // While waiting for data, show a loading indicator.
-                } else {
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    final user = snapshot.data?.data() as Map<String, dynamic>?;
-                    //if (user?['forAdoption'] == 'yes')isMarkedForAdoption=false;
-                    //else
-                    //  isMarkedForAdoption=true;
-
-                    // Check if the 'forAdoption' field is 'yes'
-                    if (user?['forAdoption'] == 'yes') {
-                      return  Container(
-                        width: 335,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: ()async {
-                                  setState(() {
-                                    isMarkedForAdoption =!isMarkedForAdoption; // Toggle adoption status
-                                  });
-                                  final userDoc = FirebaseFirestore.instance.collection('users').doc(_userData?.id);
-                                  await userDoc.update({
-                                    'forAdoption': isMarkedForAdoption ? 'yes' : 'no',
-                                  });
-                                 // await markForAdoption(isMarkedForAdoption);
-                                },
-                                icon: Icon(Icons.pets),
-                                label: Text(
-                                  '${_userData?['petName']} is marked for adoption', // Show the status text here
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).hintColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    side: BorderSide(color: Colors.blueGrey, width: 0.6),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Container(
-                        width: 335,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: ()async {
-                                  setState(() {
-                                    isMarkedForAdoption =!isMarkedForAdoption; // Toggle adoption status
-                                  });
-                                  final userDoc = FirebaseFirestore.instance.collection('users').doc(_userData?.id);
-                                  await userDoc.update({
-                                    'forAdoption': isMarkedForAdoption ? 'yes' : 'no',
-                                  });
-                                  // await markForAdoption(isMarkedForAdoption);
-                                },
-                                icon: Icon(Icons.pets),
-                                label: Text(
-                                  'Mark for adoption', // Show the status text here
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).hintColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    side: BorderSide(color: Colors.blueGrey, width: 0.6),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  }
-                }
-              },
-            ),
-
-
-
-          ],
-        ),
-      ),
     );
   }
 }
-
-
-
 
 Widget _buildInfoColumnEdit({
   required String label,
@@ -923,17 +978,19 @@ Widget _buildInfoColumnEdit({
             color: Color(0xFF00a19d),
           ),
         ),
-        if (controller != null) TextField(
-          controller: controller,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF00a19d),
+        if (controller != null)
+          TextField(
+            controller: controller,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF00a19d),
+            ),
           ),
-        ),
       ],
     ),
   );
 }
+
 Widget _buildInfoColumn({
   required String label,
   required String value,
@@ -949,20 +1006,18 @@ Widget _buildInfoColumn({
     padding: EdgeInsets.all(16),
     child: Column(
       children: [
-        Text(
-            ''
-        ),
+        Text(''),
         Text(
           label,
           style: TextStyle(
-            color:  Color(0xFFA9ACAD), // Text color
+            color: Color(0xFFA9ACAD), // Text color
           ),
         ),
         Text(
           value,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color:  Color(0xFF00a19d), // Text color
+            color: Color(0xFF00a19d), // Text color
           ),
         ),
       ],

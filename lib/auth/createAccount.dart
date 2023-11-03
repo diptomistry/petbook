@@ -110,6 +110,8 @@ class _createAccState extends State<createAcc> {
 
 
    CollectionReference users = FirebaseFirestore.instance.collection('users');
+   List<dynamic> lovedBy = [];
+   List<dynamic> followedby = [];
    List<dynamic> groupId = [];
 
    await users.doc(user?.uid).set({
@@ -126,12 +128,14 @@ class _createAccState extends State<createAcc> {
      'location':'N/A',
      'forAdoption':'no',
      'loveCount':0,
-      'species':_speciesController.text,
-     'lovedBy':'',
-     'followedby':'',
-     'groupId':groupId
+     'species':_speciesController.text,
+     'groupId':groupId,
+     'active':true,
+     'lovedBy': lovedBy.isEmpty ? [''] : lovedBy,
+     'followedby': followedby.isEmpty ? [''] : followedby,
      // Add more fields as needed
    });
+
 
    //Navigator.pushNamed(context, 'profile');
    Navigator.push(

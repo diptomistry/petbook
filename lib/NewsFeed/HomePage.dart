@@ -1,13 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:intl/intl.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:petbook/NavBar/HomeNavBar.dart';
 import 'package:redacted/redacted.dart';
 
@@ -702,6 +697,11 @@ class _HomePageState extends State<HomePage> {
                                                                         _textController,
                                                                     decoration:
                                                                         InputDecoration(
+                                                                      contentPadding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              10,
+                                                                          vertical:
+                                                                              10),
                                                                       border: InputBorder
                                                                           .none,
                                                                       hintText:
@@ -709,7 +709,8 @@ class _HomePageState extends State<HomePage> {
                                                                     ),
                                                                     style: TextStyle(
                                                                         color: Colors
-                                                                            .black,
+                                                                            .grey
+                                                                            .shade600,
                                                                         fontWeight:
                                                                             FontWeight.w500),
                                                                     onSubmitted:

@@ -28,8 +28,7 @@ class ChatHomePage extends ConsumerWidget {
               ),
             );
           }
-          if (!snapshot.hasData) return Center(child: Text('No chat found'));
-          final sortedData = snapshot.data!
+          List<LastMessageModel> sortedData = snapshot.data!
             ..sort((a, b) => b.timeSent.compareTo(a.timeSent));
           return ListView.builder(
             itemCount: sortedData.length,

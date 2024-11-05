@@ -50,7 +50,7 @@ dependencies:
   ionicons:
   redacted:
 
-  photo_manager: ^2.5.0
+  photo_manager: ^3.0.0
   flutter_contacts: ^1.1.7+1
   url_launcher: ^6.1.7
   firebase_database: ^10.0.6

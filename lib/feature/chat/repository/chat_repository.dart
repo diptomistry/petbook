@@ -110,7 +110,7 @@ class ChatRepository {
         .collection('chats')
         .snapshots()
         .asyncMap((event) async {
-      print(event.docs.length);
+      //  print(event.docs.length);
       List<LastMessageModel> contacts = [];
       for (var document in event.docs) {
         print(document.data());
@@ -119,8 +119,8 @@ class ChatRepository {
             .collection('users')
             .doc(lastMessage.contactId)
             .get();
-        print(lastMessage.contactId);
-        print(userData.data());
+        //   print(lastMessage.contactId);
+        //  print(userData.data());
         final user = UserModel.fromMap(userData.data()!);
         contacts.add(
           LastMessageModel(
@@ -131,6 +131,7 @@ class ChatRepository {
             lastMessage: lastMessage.lastMessage,
           ),
         );
+        print('contacts lenght :${contacts.length}');
       }
       return contacts;
     });
